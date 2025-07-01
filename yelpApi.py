@@ -17,7 +17,9 @@ def get_attractions(city):
     response = requests.get(url=url, headers=headers, params=params)
     data = response.json()
 
-    for business in data["businesses"]:
-      print(business["name"])
+    businesses = data.get("businesses", [])
+    names = []
 
-get_attractions("paris")
+
+    return [biz["name"] for biz in data.get("businesses", [])]
+
