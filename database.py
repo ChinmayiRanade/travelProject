@@ -39,5 +39,3 @@ class Landmark(Base):
 # Function to create the database and tables if they don't exist
 def create_db_and_tables():
     Base.metadata.create_all(bind=engine)
-
-create_db_and_tables()
