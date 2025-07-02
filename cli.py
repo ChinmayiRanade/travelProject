@@ -68,7 +68,7 @@ def check_db_for_destination(destination_name):
 
     Args:
         destination_name (str): The name of the city to check.
- 
+
     Returns:
         list: A list of attraction dictionaries if found, otherwise None.
     """
@@ -130,7 +130,8 @@ def plan_new_trip():
     # if not in DB, call the Yelp API
     if not attractions:
         print(
-            f"\n🔎 No saved data found. Finding top attractions in {destination} via Yelp API..."
+            f"\n🔎 No saved data found.
+            Finding top attractions in {destination} via Yelp API..."
         )
         attractions = get_attractions(destination, num_days)
 
