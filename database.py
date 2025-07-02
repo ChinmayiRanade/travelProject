@@ -1,4 +1,3 @@
-
 from sqlalchemy import create_engine, Column, 
 from sqlalchemy import Integer, String, Text, Float, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
@@ -10,6 +9,7 @@ DATABASE_URL = "sqlite:///travel_plans.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
 
 # Define the first table: Travel
 class Travel(Base):
@@ -31,7 +31,7 @@ class Landmark(Base):
     address = Column(String)
     rating = Column(Float)
     url = Column(String)
-    
+
     # Foreign key to link back to the Travel table
     travel_id = Column(Integer, ForeignKey("userinput_travel.id"))
     travel = relationship("Travel", back_populates="landmarks")
