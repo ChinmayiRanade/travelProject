@@ -22,7 +22,8 @@ def get_attractions(city, num_days):
       num_days (int): The amount of days that would be spent on the visit
 
     Returns:
-      list: Containing all the places of attraction that would exist in the area sorted by rating
+      list: Containing all the places of attraction 
+      that would exist in the area sorted by rating
       or None if an error occurs
     """
 
@@ -50,8 +51,7 @@ def get_attractions(city, num_days):
         return None
 
     data = response.json()
-
-    # Loop through the data and 
+    # Loop through the data and
     # create a structured list from the given data from API response
     places = []
     for business in data.get("businesses", []):
