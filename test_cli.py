@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import patch, MagicMock
 from cli import check_db_for_destination, save_plan, view_saved_plan
 
-
 def test_check_db_for_destination_none_when_not_found():
     with patch('cli.SessionLocal') as MockSession:
         mock_session = MockSession.return_value.__enter__.return_value
