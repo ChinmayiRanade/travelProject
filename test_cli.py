@@ -35,20 +35,18 @@ def test_save_plan_creates_travel_and_landmarks():
         {"name": "Place B", "address": "456 St", "rating": 4.8, "url": "http://b.com"},
     ]
 
-    with patch('cli.SessionLocal') as MockSession:
-        mock_session = MockSession.return_value.__enter__.return_value
+    mock_session = MagicMock()
+    mock_session.add = MagicMock()
+    mock_session.commit = MagicMock()
+    mock_session.refresh = MagicMock()
+    mock_session.close = MagicMock()
 
-        # Wrap 'add' so we can track call count
-        mock_session.add = MagicMock()
-        mock_session.commit = MagicMock()
-        mock_session.refresh = MagicMock()
+    save_plan("Testville", mock_attractions, db=mock_session)
 
-        save_plan("Testville", mock_attractions)
+    assert mock_session.add.call_count == 3
+    assert mock_session.commit.call_count == 2
+    assert mock_session.refresh.called
 
-        # Expect at least 3 adds: 1 for Travel, 2 for Landmarks
-        assert mock_session.add.call_count == 3
-        mock_session.commit.assert_called_once()
-        assert mock_session.refresh.called
 
 
 @patch("builtins.input", side_effect=["999"])

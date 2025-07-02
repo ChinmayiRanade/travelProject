@@ -5,27 +5,32 @@ from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
 
-def save_plan(destination, attractions):
-    """
-    Saves the travel plan and attractions to database
-    """
-    with SessionLocal() as db:
-        new_travel_plan = Travel(destination=destination,
-                                 num_places=len(attractions))
+def save_plan(destination, attractions, db=None):
+    """Save a travel plan and its landmarks to the database."""
+    db_provided = db is not None
+    if not db:
+        db = SessionLocal()
 
-        for place in attractions:
-            new_landmark = Landmark(name=place['name'],
-                                    address=place['address'],
-                                    rating=place['rating'],
-                                    url=place["url"])
+    travel = Travel(destination=destination, num_places=len(attractions))
+    db.add(travel)
+    db.commit()
+    db.refresh(travel)
 
-            new_travel_plan.landmarks.append(new_landmark)
+    for place in attractions:
+        landmark = Landmark(
+            name=place["name"],
+            address=place["address"],
+            rating=place["rating"],
+            url=place["url"],
+            travel_id=travel.id,
+        )
+        db.add(landmark)
 
-        db.add(new_travel_plan)
-        db.commit()
-        db.refresh(new_travel_plan)
+    db.commit()
+    if not db_provided:
+        db.close()
 
-    print(f"\n✅Your travel plan has been saved with ID: {new_travel_plan.id}")
+    print(f"✅Your travel plan has been saved with ID: {travel.id}")
 
 
 def view_saved_plan():
