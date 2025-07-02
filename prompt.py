@@ -1,6 +1,6 @@
 import os
 import google.generativeai as genai
-from yelpApi import get_attractions
+
 
 genai.configure(api_key=os.getenv("GENAI_KEY"))
 
