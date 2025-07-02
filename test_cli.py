@@ -37,14 +37,17 @@ def test_save_plan_creates_travel_and_landmarks():
 
     with patch('cli.SessionLocal') as MockSession:
         mock_session = MockSession.return_value.__enter__.return_value
+
+        # Wrap 'add' so we can track call count
         mock_session.add = MagicMock()
         mock_session.commit = MagicMock()
         mock_session.refresh = MagicMock()
 
         save_plan("Testville", mock_attractions)
 
-        assert mock_session.add.called
-        assert mock_session.commit.called
+        # Expect at least 3 adds: 1 for Travel, 2 for Landmarks
+        assert mock_session.add.call_count == 3
+        mock_session.commit.assert_called_once()
         assert mock_session.refresh.called
 
 
