@@ -83,7 +83,7 @@ def check_db_for_destination(destination_name):
 
         if plan:
             print(
-                f"""\n💡 Found previously saved plan for {plan.destination}! 
+                f"""\n💡 Found previously saved plan for {plan.destination}!
                 Using saved attractions."""
             )
             # Reconstruct the attractions list from the database records
