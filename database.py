@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, 
+from sqlalchemy import create_engine, Column
 from sqlalchemy import Integer, String, Text, Float, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 
@@ -20,7 +20,11 @@ class Travel(Base):
     num_places = Column(Integer)
 
     # This creates a link to the Landmark table
-    landmarks = relationship("Landmark", back_populates="travel", cascade="all, delete-orphan")
+    landmarks = relationship(
+        "Landmark", 
+        back_populates="travel", 
+        cascade="all, delete-orphan")
+
 
 # Define the second table: Landmark
 class Landmark(Base):
