@@ -25,7 +25,7 @@ def save_plan(destination, attractions):
         db.commit()
         db.refresh(new_travel_plan)
 
-    print(f"\n✅Your travelplan has been saved with ID: {new_travel_plan.id}")
+    print(f"\n✅Your travel plan has been saved with ID: {new_travel_plan.id}")
 
 
 def view_saved_plan():
@@ -165,9 +165,9 @@ def plan_new_trip():
 
 def show_menu():
     print("\n✈️ Bon Voyage: Your Personal Travel Planner ✈️")
-    print("0. Show menu again")
-    print("1. Plan a new trip")
-    print("2. View a saved trip")
+    print("0. Show Menu Again")
+    print("1. Plan a New Trip")
+    print("2. View a Saved Trip")
     print("3. Exit")
 
 
