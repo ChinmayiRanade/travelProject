@@ -21,8 +21,8 @@ class Travel(Base):
 
     # This creates a link to the Landmark table
     landmarks = relationship(
-        "Landmark", 
-        back_populates="travel", 
+        "Landmark",
+        back_populates="travel",
         cascade="all, delete-orphan")
 
 
@@ -39,6 +39,7 @@ class Landmark(Base):
     # Foreign key to link back to the Travel table
     travel_id = Column(Integer, ForeignKey("userinput_travel.id"))
     travel = relationship("Travel", back_populates="landmarks")
+
 
 # Function to create the database and tables if they don't exist
 def create_db_and_tables():
