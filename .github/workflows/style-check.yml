@@ -15,5 +15,5 @@ jobs:
       - name: Install tools
         run: python -m pip install --upgrade pip pycodestyle
 
-      - name: Check Style for cli.py
-        run: pycodestyle --first cli.py
+      - name: Check Style for all python files
+        run: pycodestyle --first *.py
