@@ -17,17 +17,6 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
     Returns:
         str: The generated itinerary text.
     """
-    # attractions = get_attractions(destination, num_days)
-
-    # print("\n📍 Top attractions from Yelp:\n")
-
-    # for i, place in enumerate(attractions, 1):
-    #     print(f"{i}. {place['name']}")
-    #     print(f"   📍 Address: {place['address']}")
-    #     print(f"   ⭐ Rating: {place['rating']}")
-    #     print(f"   🔗 More info: {place['url']}\n")
-
-    # Create a formatted string of attractions for the prompt
     names = []
     for p in attractions:
         line = f"- {p['name']} ({p['address']}, Rating: {p['rating']})"
@@ -62,7 +51,8 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
 
     model = genai.GenerativeModel(
         model_name="gemini-1.5-flash",
-        system_instruction="You are a helpful travel planner. Your tone is concise, warm, "
+        system_instruction="""You are a helpful travel planner. 
+        Your tone is concise, warm, """
         "and culturally aware.",
     )
     response = model.generate_content(prompt)
