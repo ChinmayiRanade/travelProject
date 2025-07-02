@@ -138,7 +138,8 @@ def plan_new_trip():
     # handling cases where no attractions are found at all
     if not attractions:
         print(
-            f"Could not find any attractions for '{destination}'. Please try another city."
+            f"Could not find any attractions for '{destination}'.
+            Please try another city."
         )
         return
 
