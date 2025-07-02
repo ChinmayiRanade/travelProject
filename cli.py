@@ -198,7 +198,7 @@ def main():
 
         else:
             print(
-                "Invalid option, type 0 to see menu again.\nChoose 0, 1, 2 or 3"
+                "Invalid option, type 0 to see menu again.\nChoose 0, 1, 2 3"
             )
 
 
