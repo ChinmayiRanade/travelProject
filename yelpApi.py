@@ -56,23 +56,3 @@ def get_attractions(city):
 
     # Return the structred list
     return places
-
-
-"""
-# CLI user input to get the city and number of days for the visit
-destination = input("Where do you want to visit? ")
-num_days = int(input("How many days will you be staying? "))
-
-itinerary = get_attractions(destination, num_days)
-
-# CLI printed format of the results
-print("\nYour Itinerary:")
-for i, place in enumerate(itinerary, 1):
-    print(f"Day {i}: {place['name']} ({place['rating']}★) - {place['address']}")
-    print(f"More info: {place['url']}\n")
-
-# Dumps the data into a JSON file
-with open("itinerary.json", "w") as f:
-    json.dump(itinerary, f, indent=4)
-print("\n Itinerary saved to itinerary.json")
-"""
