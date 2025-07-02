@@ -3,10 +3,10 @@ from prompt import generate_itinerary
 
 
 def show_menu():
-    print("\nBon Voyage: Your Travel Planning Assistant!")
-    print("0. Show menu again")
-    print("1. Plan a new trip")
-    print("2. Exit")
+  print("\nBon Voyage: Your Travel Planning Assistant!")
+  print("0. Show menu again")
+  print("1. Plan a new trip")
+  print("2. Exit")
 
 def main():
   show_menu()
@@ -28,7 +28,7 @@ def main():
 
       attractions = get_attractions(destination, num_days)
       generate_itinerary(destination, num_days, attractions)
-        
+   
     elif choice == "2":
         print("Bon Voyage!")
         break
