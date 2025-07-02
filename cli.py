@@ -155,7 +155,8 @@ def plan_new_trip():
     if itinerary_text:
         print("\n✨ Your Custom Itinerary ✨")
         print(itinerary_text)
-        # We save a new plan regardless, as the interests/days might be different.
+        # We save a new plan regardless, as the
+        # interests/days might be different.
         save_plan(destination, attractions)
     else:
         print("Sorry, could not generate an itinerary at this time.")
