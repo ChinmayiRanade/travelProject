@@ -137,8 +137,11 @@ def plan_new_trip():
     # if not in DB, call the Yelp API
     if not attractions:
         print(
-            f"\n🔎 No saved data found. Finding top attractions in {destination} via Yelp API..."
+            f"\n🔎 No saved data found. "
+            f"Finding attractions in {destination} via Yelp API..."
         )
+
+
         attractions = get_attractions(destination, num_days)
 
     # handling cases where no attractions are found at all
@@ -203,7 +206,9 @@ def main():
             break
 
         else:
-            print("Invalid option, type 0 to see menu again.\nChoose 0, 1, 2, 3")
+            print(
+                "Invalid option, type 0 to see menu again.\nChoose 0, 1, 2, 3"
+            )
 
 
 if __name__ == "__main__":
