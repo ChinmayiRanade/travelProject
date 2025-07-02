@@ -158,7 +158,7 @@ def plan_new_trip():
     print("\n📍 Here are the attractions we'll use for your itinerary:\n")
     for i, place in enumerate(attractions, 1):
         print(f"{i}. {place['name']}")
-        print(f"   ⭐ Rating: {place['rating']} | 📍 Address: {place['address']}")
+        print(f"  ⭐ Rating: {place['rating']} | 📍 Address: {place['address']}")
 
     # to generate itinerary and save the new plan
     print("\n🤖 Generating your personalized itinerary with Gemini AI...")
@@ -208,7 +208,8 @@ def main():
             break
 
         else:
-            print("Invalid option, type 0 to see menu again.\nChoose 0, 1, 2, 3")
+            print("""Invalid option, type 0 to see menu again.
+            Choose 0, 1, 2, 3""")
 
 
 if __name__ == "__main__":
