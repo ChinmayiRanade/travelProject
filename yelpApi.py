@@ -1,7 +1,7 @@
 import os
 import requests
-import json
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Retrieve API Key from .env files
@@ -21,23 +21,34 @@ def get_attractions(city, num_days):
       num_days (int): The amount of days that would be spent on the visit 
     
     Returns:
-      list: Containing all the places of attraction that would exist in the area sorted by rating
+      list: Containing all the places of attraction that would exist in the area sorted by rating 
+      or None if an error occurs
     """
 
     # Yelp API call
     url = "https://api.yelp.com/v3/businesses/search"
     headers = {"Authorization": f"Bearer {API_KEY}"}
 
-    # Custom request based on the city and number of days for visit
+    # Custom request based on the city and number of days for visit or more to give ai more choice
+
+    limit = min(num_days * 2, 20)
+
     params = {
-      "location": city,
-      "categories": "landmarks, parks, museums",
-      "limit": num_days,
-      'sort_by': 'rating',
+        "location": city,
+        "categories": "landmarks, parks, museums",
+        "limit": limit,
+        'sort_by': 'rating',
     }
 
-    # Process the response into readable JSON format
-    response = requests.get(url=url, headers=headers, params=params)
+    try:
+
+        # Process the response into readable JSON format
+        response = requests.get(url=url, headers=headers, params=params)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Error calling Yelp API: {e}")
+        return None
+
     data = response.json()
 
     # Loop through the data and create a structured list from the given data from API response
@@ -52,25 +63,3 @@ def get_attractions(city, num_days):
 
     # Return the structred list
     return places
-"""
-# CLI user input to get the city and number of days for the visit
-destination = input("Where do you want to visit? ")
-num_days = int(input("How many days will you be staying? "))
-"""
-"""
-itinerary = get_attractions(destination, num_days)
-"""
-
-"""
-# CLI printed format of the results
-print("\nYour Itinerary:")
-for i, place in enumerate(itinerary, 1):
-    print(f"Day {i}: {place['name']} ({place['rating']}★) - {place['address']}")
-    print(f"More info: {place['url']}\n")
-
-# Dumps the data into a JSON file
-with open("itinerary.json", "w") as f:
-    json.dump(itinerary, f, indent=4)
-print("\n Itinerary saved to itinerary.json")
-"""
-print(get_attractions("rome", 4))
