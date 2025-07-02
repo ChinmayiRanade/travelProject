@@ -11,9 +11,10 @@ API_KEY = os.getenv("YELP_API_KEY")
 if not API_KEY:
     raise ValueError("YELP_API_KEY not found in environment variables")
 
+
 def get_attractions(city, num_days):
     """
-    Gets the attraction spots(landmarks, parks and museums) 
+    Gets the attraction spots(landmarks, parks and museums)
     based on the provide city
 
     Args:
@@ -42,7 +43,6 @@ def get_attractions(city, num_days):
     }
 
     try:
-
         # Process the response into readable JSON format
         response = requests.get(url=url, headers=headers, params=params)
         response.raise_for_status()
@@ -52,7 +52,8 @@ def get_attractions(city, num_days):
 
     data = response.json()
 
-    # Loop through the data and create a structured list from the given data from API response
+    # Loop through the data and 
+    # create a structured list from the given data from API response
     places = []
     for business in data.get('businesses', []):
         places.append({
