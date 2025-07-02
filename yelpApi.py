@@ -5,8 +5,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-
-
 def get_attractions(city, num_days):
     """
     Gets the attraction spots(landmarks, parks and museums) based on the
