@@ -4,12 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Retrieve API Key from .env files
-API_KEY = os.getenv("YELP_API_KEY")
 
-# If the API key doesn't exist raise an error
-if not API_KEY:
-    raise ValueError("YELP_API_KEY not found in environment variables")
 
 
 def get_attractions(city, num_days):
@@ -26,6 +21,13 @@ def get_attractions(city, num_days):
       that would exist in the area sorted by rating
       or None if an error occurs
     """
+
+    # Retrieve API Key from .env files
+    API_KEY = os.getenv("YELP_API_KEY")
+
+    # If the API key doesn't exist raise an error
+    if not API_KEY:
+        raise ValueError("YELP_API_KEY not found in environment variables")
 
     # Yelp API call
     url = "https://api.yelp.com/v3/businesses/search"
