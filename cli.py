@@ -65,7 +65,7 @@ def view_saved_plan():
 def check_db_for_destination(destination_name):
     """
     Checks the database for a previously saved plan for a destination.
-  
+
     Args:
         destination_name (str): The name of the city to check.
         
@@ -83,7 +83,8 @@ def check_db_for_destination(destination_name):
 
         if plan:
             print(
-                f"\n💡 Found a previously saved plan for {plan.destination}! Using saved attractions."
+                f"\n💡 Found a previously saved plan for {plan.destination}!
+                Using saved attractions."
             )
             # Reconstruct the attractions list from the database records
             attractions = []
