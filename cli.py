@@ -106,7 +106,7 @@ def plan_new_trip():
     destination = input("Enter a city for your travel itinerary: ")
     days = input("How many days are you traveling for? ")
     interests = input(
-        "What are some of your interests (e.g., history, food, coding, music)? "
+        "What are some of your interests (history, food, coding, music)? "
     )
     budget = input("What is your approximate daily budget in USD? ")
     try:
@@ -137,7 +137,8 @@ def plan_new_trip():
     # handling cases where no attractions are found at all
     if not attractions:
         print(
-            f"Could not find any attractions for '{destination}'. Please try another city."
+            f"Could not find any attractions for '{destination}'.
+            Please try another city."
         )
         return
 
