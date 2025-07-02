@@ -1,7 +1,7 @@
 import os
-import google.generativeai as genai
 
-genai.configure(api_key=os.getenv("GENAI_KEY"))
+
+
 
 
 def get_itinerary(destination, num_days, interest, attractions, budget):
@@ -17,6 +17,9 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
     Returns:
         str: The generated itinerary text.
     """
+    import google.generativeai as genai
+    genai.configure(api_key=os.getenv("GENAI_KEY"))
+
     names = []
     for place in attractions:
         line = f"- {place['name']} ({place['address']}, Rating: {place['rating']})"
