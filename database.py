@@ -17,7 +17,7 @@ class Itinerary(Base):
     id = Column(Integer, primary_key=True, index=True)
     destination = Column(String, index=True)
     num_places = Column(Integer)
-    generated_itinerary = Column(Text) # Storing the JSON from Gemini
+    # generated_itinerary = Column(Text) # Storing the JSON from Gemini
 
     # This creates a link to the Landmark table
     landmarks = relationship("Landmark", back_populates="itinerary")

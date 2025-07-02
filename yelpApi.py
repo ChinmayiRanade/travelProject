@@ -73,3 +73,4 @@ with open("itinerary.json", "w") as f:
     json.dump(itinerary, f, indent=4)
 print("\n Itinerary saved to itinerary.json")
 """
+print(get_attractions("rome", 4))
