@@ -15,9 +15,9 @@ def save_plan(destination, attractions):
 
         for place in attractions:
             new_landmark = Landmark(name=place['name'],
-                                address=place['address'],
-                                rating=place['rating'],
-                                url=place["url"])
+                                    address=place['address'],
+                                    rating=place['rating'],
+                                    url=place["url"])
 
             new_travel_plan.landmarks.append(new_landmark)
 
@@ -68,7 +68,7 @@ def check_db_for_destination(destination_name):
 
     Args:
         destination_name (str): The name of the city to check.
-        
+
     Returns:
         list: A list of attraction dictionaries if found, otherwise None.
     """
@@ -83,7 +83,8 @@ def check_db_for_destination(destination_name):
 
         if plan:
             print(
-                f"\n💡 Found a previously saved plan for {plan.destination}! Using saved attractions."
+                f"\n💡 Found a previously saved plan for {plan.destination}!
+                Using saved attractions."
             )
             # Reconstruct the attractions list from the database records
             attractions = []
