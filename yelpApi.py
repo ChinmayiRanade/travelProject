@@ -22,7 +22,7 @@ def get_attractions(city, num_days):
       num_days (int): The amount of days that would be spent on the visit
 
     Returns:
-      list: Containing all the places of attraction 
+      list: Containing all the places of attraction
       that would exist in the area sorted by rating
       or None if an error occurs
     """
