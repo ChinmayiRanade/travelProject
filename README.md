@@ -80,7 +80,6 @@ You will be greeted with the main menu:
 
 ```
 ✈️ Bon Voyage: Your Personal Travel Planner ✈️
-0. Show menu again
 1. Plan a new trip
 2. View a saved trip
 3. Exit
