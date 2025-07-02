@@ -51,7 +51,7 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
 
     model = genai.GenerativeModel(
         model_name="gemini-1.5-flash",
-        system_instruction="""You are a helpful travel planner. 
+        system_instruction="""You are a helpful travel planner.
         Your tone is concise, warm, """
         "and culturally aware.",
     )
