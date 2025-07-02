@@ -11,7 +11,6 @@ API_KEY = os.getenv("YELP_API_KEY")
 if not API_KEY:
     raise ValueError("YELP_API_KEY not found in environment variables")
 
-
 def get_attractions(city, num_days):
     """
     Gets the attraction spots(landmarks, parks and museums) 
@@ -20,7 +19,7 @@ def get_attractions(city, num_days):
     Args:
       city (string): The city the user would like to visit
       num_days (int): The amount of days that would be spent on the visit
-    
+
     Returns:
       list: Containing all the places of attraction 
       that would exist in the area sorted by rating 
@@ -31,7 +30,8 @@ def get_attractions(city, num_days):
     url = "https://api.yelp.com/v3/businesses/search"
     headers = {"Authorization": f"Bearer {API_KEY}"}
 
-    # Custom request based on the city and number of days for visit or more to give ai more choice
+    # Custom request based on the city and 
+    # number of days for visit or more to give ai more choice
     limit = max(num_days * 2, 10)
 
     params = {
