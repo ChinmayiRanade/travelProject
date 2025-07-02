@@ -1,9 +1,17 @@
 import unittest
 import os
 os.environ["YELP_API_KEY"] = "fake-key-for-tests"
+os.environ["GENAI_KEY"] = "fake-genai-key-for-tests"
 
 from unittest.mock import patch, MagicMock
-from cli import check_db_for_destination, save_plan, view_saved_plan
+
+# Mock google.generativeai globally before importing cli
+with patch.dict('sys.modules', {
+    'google': MagicMock(),
+    'google.generativeai': MagicMock()
+}):
+    from cli import check_db_for_destination, save_plan, view_saved_plan
+
 
 def test_check_db_for_destination_none_when_not_found():
     with patch('cli.SessionLocal') as MockSession:
@@ -12,6 +20,7 @@ def test_check_db_for_destination_none_when_not_found():
 
         result = check_db_for_destination("nowhere")
         assert result is None
+
 
 def test_save_plan_creates_travel_and_landmarks():
     mock_attractions = [
@@ -30,6 +39,7 @@ def test_save_plan_creates_travel_and_landmarks():
         assert mock_session.add.called
         assert mock_session.commit.called
         assert mock_session.refresh.called
+
 
 @patch("builtins.input", side_effect=["999"])
 def test_view_saved_plan_with_invalid_id(mock_input):
