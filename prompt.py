@@ -2,7 +2,6 @@ import os
 from google import genai
 from google.genai import types
 from apiYelp import get_attractions
-from db import save_attractions
 
 my_api_key = os.getenv('GENAI_KEY')
 genai.api_key = my_api_key
@@ -10,42 +9,41 @@ genai.api_key = my_api_key
 
 client = genai.Client(api_key=my_api_key)
 
-destination = input("Enter a city for your travel itinerary: ")
-days = input("How many days are you traveling for? ")
+def generate_itinerary(destination, days, attractions):
+    print('\n📍 Top attractions from Yelp:\n')
+    for i, place in enumerate(attractions, 1):
+        print(f"{i}. {place['name']}")
+        print(f"   📍 Address: {place['address']}")
+        print(f"   ⭐ Rating: {place['rating']}")
+        print(f"   🔗 More info: {place['url']}\n")
 
+    names = []
+    for place in attractions:
+        line = f"- {place['name']} ({place['address']}, Rating: {place['rating']})"
+        names.append(line)
 
-attractions = get_attractions(destination, int(days))
+    attractions_list = "\n".join(names)
 
-print('\n📍 Top attractions from Yelp:\n')
-for i, place in enumerate(attractions, 1):
-    print(f"{i}. {place['name']}")
-    print(f"   📍 Address: {place['address']}")
-    print(f"   ⭐ Rating: {place['rating']}")
-    print(f"   🔗 More info: {place['url']}\n")
+    prompt = (
+        f"You are a professional travel assistant. The user is visiting {destination} for the first time.\n"
+        f"Based on the following top-rated attractions:\n"
+        f"{attractions_list}\n\n"
+        f"Create a detailed {days}-day travel itinerary. For each day:\n"
+        f"- Include a clear morning, afternoon, and evening plan.\n"
+        f"- Specify which attraction to visit and when.\n"
+        f"- Suggest a local meal (lunch or dinner) with cuisine type.\n"
+        f"- Recommend relaxing or fun evening activities.\n"
+        f"- Use one greeting or phrase in the city's local language.\n\n"
+        f"Format the output with 'Day 1', 'Day 2', etc. Use concise but helpful instructions suitable for someone new to the city."
+    )
 
-names = []
-for place in attractions:
-    line = f"- {place['name']} ({place['address']}, Rating: {place['rating']})"
-    names.append(line)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        config=types.GenerateContentConfig(
+            system_instruction="You are a helpful travel planner. Your tone is concise, warm, and culturally aware.",
+        ),
+        contents=prompt,
+    )
 
-attractions_list = "\n".join(names)
-
-prompt = (
-    f"You are a travel assistant. Based on the following top places in {destination}:\n"
-    f"{attractions_list}\n\n"
-    f"Create a {days}-day travel itinerary that includes these attractions. "
-    f"Each day's plan should be 4–5 sentences long, combining activities and meals. "
-    f"Avoid overly long descriptions. Be friendly and informative, but keep it tight. "
-    f"Include one phrase or greeting in the local language per day."
-)
-
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    config=types.GenerateContentConfig(
-        system_instruction="You are a helpful travel planner. Your tone is concise, warm, and culturally aware.",
-    ),
-    contents=prompt,
-)
-
-print("\nGenerated itinerary:")
-print(response.text)
+    print("\n🧳 Generated itinerary:")
+    print(response.text)
