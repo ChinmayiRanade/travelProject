@@ -130,7 +130,8 @@ def plan_new_trip():
     # if not in DB, call the Yelp API
     if not attractions:
         print(
-            f"\n🔎 No saved data found. Finding top attractions in {destination} via Yelp API..."
+            f"\n🔎 No saved data found.
+            Finding top attractions in {destination} via Yelp API..."
         )
         attractions = get_attractions(destination, num_days)
 
