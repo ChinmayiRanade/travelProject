@@ -12,7 +12,7 @@ if not API_KEY:
     raise ValueError("YELP_API_KEY not found in environment variables")
 
 
-def get_attractions(city):
+def get_attractions(city, num_days):
     """
     Gets the attraction spots(landmarks, parks and museums) based on the
     provide city
@@ -22,24 +22,38 @@ def get_attractions(city):
       num_days (int): The amount of days that would be spent on the visit
 
     Returns:
-      list: Containing all the places of attraction that would exist in the
-      area sorted by rating
+      list: Containing all the places of attraction that would exist in the area sorted by rating
+      or None if an error occurs
     """
 
     # Yelp API call
     url = "https://api.yelp.com/v3/businesses/search"
     headers = {"Authorization": f"Bearer {API_KEY}"}
 
-    # Custom request based on the city and number of days for visit
+    # Custom request based on the city and number of days for visit or more to give ai more choice
+
+    limit = min(num_days * 2, 20)
+
     params = {
         "location": city,
         "categories": "landmarks, parks, museums",
         "limit": 10,
         "sort_by": "rating",
+        "location": city,
+        "categories": "landmarks, parks, museums",
+        "limit": limit,
+        "sort_by": "rating",
     }
 
-    # Process the response into readable JSON format
-    response = requests.get(url=url, headers=headers, params=params)
+    try:
+
+        # Process the response into readable JSON format
+        response = requests.get(url=url, headers=headers, params=params)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Error calling Yelp API: {e}")
+        return None
+
     data = response.json()
 
     # Loop through the data and create a structured list from the given data from API response
