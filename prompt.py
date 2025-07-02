@@ -19,7 +19,6 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
     """
     # attractions = get_attractions(destination, num_days)
 
-
     # print("\n📍 Top attractions from Yelp:\n")
 
     # for i, place in enumerate(attractions, 1):
@@ -27,7 +26,7 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
     #     print(f"   📍 Address: {place['address']}")
     #     print(f"   ⭐ Rating: {place['rating']}")
     #     print(f"   🔗 More info: {place['url']}\n")
-    
+
     # Create a formatted string of attractions for the prompt
     names = []
     for place in attractions:
