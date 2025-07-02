@@ -19,4 +19,6 @@ jobs:
           pip install pytest
 
       - name: Run tests with pytest
-        run: pytest
+        env:
+          PYTHONPATH: ${{ github.workspace }}/travelProject  # Add this line
+        run: pytest tests
