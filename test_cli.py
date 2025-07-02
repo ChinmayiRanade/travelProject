@@ -1,4 +1,7 @@
 import unittest
+import os
+os.environ["YELP_API_KEY"] = "fake-key-for-tests"
+
 from unittest.mock import patch, MagicMock
 from cli import check_db_for_destination, save_plan, view_saved_plan
 
