@@ -5,7 +5,7 @@ import google.generativeai as genai
 genai.configure(api_key=os.getenv("GENAI_KEY"))
 
 
-def get_itinerary(destination, num_days, interest, attractions):
+def get_itinerary(destination, num_days, interest, attractions, budget):
     """
     Generates a travel itinerary using a generative AI model.
 
@@ -39,7 +39,7 @@ def get_itinerary(destination, num_days, interest, attractions):
     prompt = (
         f"You are a helpful and culturally aware travel planner. "
         f"The user is visiting {destination} for {num_days} days and is "
-        f"particularly interested in {interest}. "
+        f"particularly interested in {interest}. They have a daily travel budget of ${budget}.\n\n"
         f"Here are the top attractions in the city:\n"
         f"{attractions_list}\n\n"
         f"Based on these locations and the user's interest in {interest}, "
@@ -51,7 +51,16 @@ def get_itinerary(destination, num_days, interest, attractions):
         f"Each day's plan should be 4–5 sentences long, combining activities and meals. "
         f"Avoid long descriptions. Use a friendly and concise tone. "
         f"Include one local-language phrase or greeting each day."
-    )
+        f"Each day must include:\n"
+        f"- Morning, afternoon, and evening activity (with time suggestions).\n"
+        f"- Mention which attraction is visited and when.\n"
+        f"- Recommend a local meal (e.g., lunch/dinner) with cuisine type.\n"
+        f"- Suggest an evening experience.\n"
+        f"- Use one local-language greeting or phrase each day.\n"
+        f"- 💰 For each day, estimate how much the user might spend on: attraction tickets, food, transport, and extras. "
+        f"Make sure the total stays within ${budget}.\n\n"
+        f"Use friendly tone, clear structure, and format the output with 'Day 1', 'Day 2', etc."
+        )
 
     model = genai.GenerativeModel(
         model_name="gemini-1.5-flash",

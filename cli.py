@@ -13,12 +13,10 @@ def save_plan(destination, attractions):
         new_travel_plan = Travel(destination=destination, num_places=len(attractions))
 
         for place in attractions:
-            new_landmark = Landmark(
-                name=place["name"],
-                address=place["address"],
-                rating=place["rating"],
-                url=place["url"],
-            )
+            new_landmark = Landmark(name=place['name'],
+                                    address=place['address'],
+                                    rating=place['rating'],
+                                    url=place["url"])
 
             new_travel_plan.landmarks.append(new_landmark)
 
@@ -26,7 +24,7 @@ def save_plan(destination, attractions):
         db.commit()
         db.refresh(new_travel_plan)
 
-    print(f"\n✅Your travelplan has been saved with ID: {new_travel_plan.id}")
+    print(f"\n✅Your travel plan has been saved with ID: {new_travel_plan.id}")
 
 
 def view_saved_plan():
@@ -76,7 +74,7 @@ def check_db_for_destination(destination_name):
         list: A list of attraction dictionaries if found, otherwise None.
     """
     with SessionLocal() as db:
-        # Query for the most recent plan for this destination (case-insensitive)
+        # Query for most recent plan for this destination(case-insensitive)
         # We order by ID descending and take the first one.
         plan = (
             db.query(Travel)
@@ -88,7 +86,7 @@ def check_db_for_destination(destination_name):
 
         if plan:
             print(
-                f"\n💡 Found a previously saved plan for {plan.destination}! "
+                f"\n💡 Found a previously saved plan for {plan.destination}!"
                 "Using saved attractions."
             )
             # Reconstruct the attractions list from the database records
@@ -113,8 +111,14 @@ def plan_new_trip():
     destination = input("Enter a city for your travel itinerary: ")
     days = input("How many days are you traveling for? ")
     interests = input(
-        "What are some of your interests (e.g., history, food, coding, music)? "
+        "What are some of your interests (history, food, coding, music)? "
     )
+    budget = input("What is your approximate daily budget in USD? ")
+    try:
+        budget = int(budget)
+    except ValueError:
+        print("Please enter a valid number for your budget.")
+        return
 
     try:
         num_days = int(days)
@@ -131,14 +135,16 @@ def plan_new_trip():
     # if not in DB, call the Yelp API
     if not attractions:
         print(
-            f"\n🔎 No saved data found. Finding top attractions in {destination} via Yelp API..."
+            f"\n🔎 No saved data found."
+            "Finding top attractions in {destination} via Yelp API..."
         )
         attractions = get_attractions(destination, num_days)
 
     # handling cases where no attractions are found at all
     if not attractions:
         print(
-            f"Could not find any attractions for '{destination}'. Please try another city."
+            f"Could not find any attractions for '{destination}'."
+            "Please try another city."
         )
         return
 
@@ -150,12 +156,14 @@ def plan_new_trip():
 
     # to generate itinerary and save the new plan
     print("\n🤖 Generating your personalized itinerary with Gemini AI...")
-    itinerary_text = get_itinerary(destination, num_days, interests, attractions)
+    itinerary_text = get_itinerary(destination, num_days, interests,
+                                   attractions, budget)
 
     if itinerary_text:
         print("\n✨ Your Custom Itinerary ✨")
         print(itinerary_text)
-        # We save a new plan regardless, as the interests/days might be different.
+        # We save a new plan regardless, as the
+        # interests/days might be different.
         save_plan(destination, attractions)
     else:
         print("Sorry, could not generate an itinerary at this time.")
@@ -163,9 +171,9 @@ def plan_new_trip():
 
 def show_menu():
     print("\n✈️ Bon Voyage: Your Personal Travel Planner ✈️")
-    print("0. Show menu again")
-    print("1. Plan a new trip")
-    print("2. View a saved trip")
+    print("0. Show Menu Again")
+    print("1. Plan a New Trip")
+    print("2. View a Saved Trip")
     print("3. Exit")
 
 
@@ -193,7 +201,9 @@ def main():
             break
 
         else:
-            print("Invalid option, type 0 to see menu again.\nChoose 0, 1, 2 or 3")
+            print(
+                "Invalid option, type 0 to see menu again.\nChoose 0, 1, 2, 3"
+            )
 
 
 if __name__ == "__main__":
