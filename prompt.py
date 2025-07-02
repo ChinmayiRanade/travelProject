@@ -31,7 +31,7 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
         They have a daily travel budget of ${budget}.\n\n"""
         f"Here are the top attractions in the city:\n"
         f"{attractions_list}\n\n"
-        f"""Based on these locations, their interests, 
+        f"""Based on these locations, their interests,
         and the ${budget} daily budget,"""
         f"create a detailed {num_days}-day travel itinerary. "
         f"Each day must include:\n"
