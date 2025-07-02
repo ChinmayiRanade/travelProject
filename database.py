@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column
-from sqlalchemy import Integer, String, Text, Float, ForeignKey
+from sqlalchemy import Integer, String, Float, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 
 # Use a file-based SQLite database
@@ -21,13 +21,12 @@ class Travel(Base):
 
     # This creates a link to the Landmark table
     landmarks = relationship(
-        "Landmark",
-        back_populates="travel",
-        cascade="all, delete-orphan")
+        "Landmark", back_populates="travel", cascade="all, delete-orphan"
+    )
 
 
-# Define the second table: Landmark
 class Landmark(Base):
+    # Define the second table: Landmark
     __tablename__ = "landmarks"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -41,6 +40,6 @@ class Landmark(Base):
     travel = relationship("Travel", back_populates="landmarks")
 
 
-# Function to create the database and tables if they don't exist
 def create_db_and_tables():
+    # Function to create the database and tables if they don't exist
     Base.metadata.create_all(bind=engine)

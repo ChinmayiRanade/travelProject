@@ -14,16 +14,15 @@ if not API_KEY:
 
 def get_attractions(city, num_days):
     """
-    Gets the attraction spots(landmarks, parks and museums)
-    based on the provide city
+    Gets the attraction spots(landmarks, parks and museums) based on the
+    provide city
 
     Args:
       city (string): The city the user would like to visit
       num_days (int): The amount of days that would be spent on the visit
 
     Returns:
-      list: Containing all the places of attraction
-      that would exist in the area sorted by rating
+      list: Containing all the places of attraction that would exist in the area sorted by rating
       or None if an error occurs
     """
 
@@ -39,7 +38,7 @@ def get_attractions(city, num_days):
         "location": city,
         "categories": "landmarks, parks, museums",
         "limit": limit,
-        'sort_by': 'rating',
+        "sort_by": "rating",
     }
 
     try:
@@ -55,13 +54,15 @@ def get_attractions(city, num_days):
     # Loop through the data and 
     # create a structured list from the given data from API response
     places = []
-    for business in data.get('businesses', []):
-        places.append({
-            'name': business['name'],
-            'address': ", ".join(business['location']['display_address']),
-            'rating': business['rating'],
-            'url': business['url']
-        })
+    for business in data.get("businesses", []):
+        places.append(
+            {
+                "name": business["name"],
+                "address": ", ".join(business["location"]["display_address"]),
+                "rating": business["rating"],
+                "url": business["url"],
+            }
+        )
 
     # Return the structred list
     return places
