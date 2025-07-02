@@ -1,9 +1,16 @@
 import unittest
 import os
+from unittest.mock import patch, MagicMock
+
+# Set fake API keys for testing
 os.environ["YELP_API_KEY"] = "fake-key-for-tests"
 os.environ["GENAI_KEY"] = "fake-genai-key-for-tests"
 
-from unittest.mock import patch, MagicMock
+# Create database tables before tests run
+from database import engine, Base
+
+def setup_module(module):
+    Base.metadata.create_all(bind=engine)
 
 # Mock google.generativeai globally before importing cli
 with patch.dict('sys.modules', {
