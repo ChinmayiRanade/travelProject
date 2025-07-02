@@ -1,7 +1,7 @@
 import os 
 from google import genai
 from google.genai import types
-from apiYelp import get_attractions
+from yelpApi import get_attractions
 
 my_api_key = os.getenv('GENAI_KEY')
 genai.api_key = my_api_key
