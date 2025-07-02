@@ -30,8 +30,8 @@ def get_attractions(city, num_days):
     url = "https://api.yelp.com/v3/businesses/search"
     headers = {"Authorization": f"Bearer {API_KEY}"}
 
-    # Custom request based on the city and number of days for visit or more to give ai more choice
-
+    # Custom request based on the city and 
+    # number of days for visit or more to give ai more choice
     limit = max(num_days * 2, 10)
 
     params = {
@@ -42,7 +42,6 @@ def get_attractions(city, num_days):
     }
 
     try:
-
         # Process the response into readable JSON format
         response = requests.get(url=url, headers=headers, params=params)
         response.raise_for_status()
@@ -52,7 +51,8 @@ def get_attractions(city, num_days):
 
     data = response.json()
 
-    # Loop through the data and create a structured list from the given data from API response
+    # Loop through the data and 
+    # create a structured list from the given data from API response
     places = []
     for business in data.get("businesses", []):
         places.append(
