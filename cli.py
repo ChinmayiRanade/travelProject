@@ -4,19 +4,21 @@ from database import SessionLocal, create_db_and_tables, Travel, Landmark
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
+
 def save_plan(destination, attractions):
     """
     Saves the travel plan and attractions to database
     """
     with SessionLocal() as db:
-        new_travel_plan = Travel(destination=destination,
-                                 num_places=len(attractions))
+        new_travel_plan = Travel(destination=destination, num_places=len(attractions))
 
         for place in attractions:
-            new_landmark = Landmark(name=place['name'],
-                                address=place['address'],
-                                rating=place['rating'],
-                                url=place["url"])
+            new_landmark = Landmark(
+                name=place["name"],
+                address=place["address"],
+                rating=place["rating"],
+                url=place["url"],
+            )
 
             new_travel_plan.landmarks.append(new_landmark)
 
@@ -33,17 +35,19 @@ def view_saved_plan():
     """
 
     try:
-        plan_id = int(
-            input("Enter the id of the travel plan you want to view: "))
+        plan_id = int(input("Enter the id of the travel plan you want to view: "))
     except ValueError:
         print("Invalid ID. Please enter a number.")
         return
 
     with SessionLocal() as db:
         # Query for the travel plan and its associated landmarks
-        plan = db.query(Travel).options(
-            joinedload(Travel.landmarks)
-            ).filter(Travel.id == plan_id).first()
+        plan = (
+            db.query(Travel)
+            .options(joinedload(Travel.landmarks))
+            .filter(Travel.id == plan_id)
+            .first()
+        )
 
         if not plan:
             print(f"No travel plan found with ID: {plan_id}")
@@ -64,35 +68,40 @@ def view_saved_plan():
 def check_db_for_destination(destination_name):
     """
     Checks the database for a previously saved plan for a destination.
-    
+
     Args:
         destination_name (str): The name of the city to check.
-        
+
     Returns:
         list: A list of attraction dictionaries if found, otherwise None.
     """
     with SessionLocal() as db:
         # Query for the most recent plan for this destination (case-insensitive)
         # We order by ID descending and take the first one.
-        plan = db.query(Travel).options(
-            joinedload(Travel.landmarks)
-        ).filter(
-            func.lower(Travel.destination) ==
-            destination_name.lower()).order_by(Travel.id.desc()).first()
+        plan = (
+            db.query(Travel)
+            .options(joinedload(Travel.landmarks))
+            .filter(func.lower(Travel.destination) == destination_name.lower())
+            .order_by(Travel.id.desc())
+            .first()
+        )
 
         if plan:
             print(
-                f"\n💡 Found a previously saved plan for {plan.destination}! Using saved attractions."
+                f"\n💡 Found a previously saved plan for {plan.destination}! "
+                "Using saved attractions."
             )
             # Reconstruct the attractions list from the database records
             attractions = []
             for landmark in plan.landmarks:
-                attractions.append({
-                    'name': landmark.name,
-                    'address': landmark.address,
-                    'rating': landmark.rating,
-                    'url': landmark.url
-                })
+                attractions.append(
+                    {
+                        "name": landmark.name,
+                        "address": landmark.address,
+                        "rating": landmark.rating,
+                        "url": landmark.url,
+                    }
+                )
             return attractions
     return None
 
@@ -137,13 +146,11 @@ def plan_new_trip():
     print("\n📍 Here are the attractions we'll use for your itinerary:\n")
     for i, place in enumerate(attractions, 1):
         print(f"{i}. {place['name']}")
-        print(
-            f"   ⭐ Rating: {place['rating']} | 📍 Address: {place['address']}")
+        print(f"   ⭐ Rating: {place['rating']} | 📍 Address: {place['address']}")
 
     # to generate itinerary and save the new plan
     print("\n🤖 Generating your personalized itinerary with Gemini AI...")
-    itinerary_text = get_itinerary(destination, num_days, interests,
-                                   attractions)
+    itinerary_text = get_itinerary(destination, num_days, interests, attractions)
 
     if itinerary_text:
         print("\n✨ Your Custom Itinerary ✨")
@@ -186,9 +193,7 @@ def main():
             break
 
         else:
-            print(
-                "Invalid option, type 0 to see menu again.\nChoose 0, 1, 2 or 3"
-            )
+            print("Invalid option, type 0 to see menu again.\nChoose 0, 1, 2 or 3")
 
 
 if __name__ == "__main__":

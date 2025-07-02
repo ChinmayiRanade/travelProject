@@ -37,10 +37,6 @@ def get_attractions(city, num_days):
     params = {
         "location": city,
         "categories": "landmarks, parks, museums",
-        "limit": 10,
-        "sort_by": "rating",
-        "location": city,
-        "categories": "landmarks, parks, museums",
         "limit": limit,
         "sort_by": "rating",
     }

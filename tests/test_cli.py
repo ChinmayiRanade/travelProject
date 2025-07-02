@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from cli import save_plan, check_db_for_destination, view_saved_plan, plan_new_trip
 
+
 class TestLCliFunctions(unittest.TestCase):
     @patch("cli.SessionLocal")
     def test_save_plan(self, mock_session):
@@ -12,8 +13,18 @@ class TestLCliFunctions(unittest.TestCase):
         mock_refresh = db.refresh
 
         attractions = [
-            {"name": "Place A", "address": "Address A", "rating": 4.5, "url": "http://a.com"},
-            {"name": "Place B", "address": "Address B", "rating": 4.7, "url": "http://b.com"},
+            {
+                "name": "Place A",
+                "address": "Address A",
+                "rating": 4.5,
+                "url": "http://a.com",
+            },
+            {
+                "name": "Place B",
+                "address": "Address B",
+                "rating": 4.7,
+                "url": "http://b.com",
+            },
         ]
 
         save_plan("Paris", attractions)
@@ -104,26 +115,32 @@ class TestLCliFunctions(unittest.TestCase):
         result = view_saved_plan()  # should not raise
         self.assertIsNone(result)
 
-
     @patch("builtins.input", side_effect=["Paris", "two", "food"])
     def test_plan_new_trip_invalid_days(self, mock_input):
-        with patch("cli.check_db_for_destination"), \
-            patch("cli.get_attractions"), \
-            patch("cli.get_itinerary"), \
-            patch("cli.save_plan"):
+        with patch("cli.check_db_for_destination"), patch("cli.get_attractions"), patch(
+            "cli.get_itinerary"
+        ), patch("cli.save_plan"):
             plan_new_trip()  # Should handle and print error without crash
 
     @patch("builtins.input", side_effect=["Paris", "2", "food"])
     @patch("cli.get_itinerary", return_value=None)
-    @patch("cli.get_attractions", return_value=[{
-        "name": "Eiffel Tower",
-        "address": "Champ de Mars",
-        "rating": 4.7,
-        "url": "http://eiffel.com"
-    }])
+    @patch(
+        "cli.get_attractions",
+        return_value=[
+            {
+                "name": "Eiffel Tower",
+                "address": "Champ de Mars",
+                "rating": 4.7,
+                "url": "http://eiffel.com",
+            }
+        ],
+    )
     @patch("cli.check_db_for_destination", return_value=None)
-    def test_plan_new_trip_no_itinerary(self, mock_check, mock_yelp, mock_prompt, mock_input):
+    def test_plan_new_trip_no_itinerary(
+        self, mock_check, mock_yelp, mock_prompt, mock_input
+    ):
         plan_new_trip()  # Should handle None from get_itinerary and not crash
+
 
 if __name__ == "__main__":
     unittest.main()

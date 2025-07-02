@@ -5,12 +5,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database import Base, Travel, Landmark
 
+
 class TestDatabaseRelationships(unittest.TestCase):
     def setUp(self):
         # Create a temporary database file
         self.db_fd, self.db_path = tempfile.mkstemp(suffix=".db")
         self.test_url = f"sqlite:///{self.db_path}"
-        self.engine = create_engine(self.test_url, connect_args={"check_same_thread": False})
+        self.engine = create_engine(
+            self.test_url, connect_args={"check_same_thread": False}
+        )
         Base.metadata.create_all(self.engine)
         self.Session = sessionmaker(bind=self.engine)
         self.db = self.Session()
@@ -18,7 +21,7 @@ class TestDatabaseRelationships(unittest.TestCase):
     def tearDown(self):
         self.db.close()
         self.engine.dispose()  # release connection pool
-        os.close(self.db_fd)   # close the OS file descriptor
+        os.close(self.db_fd)  # close the OS file descriptor
         os.remove(self.db_path)
 
     def test_travel_landmark_relationship(self):
