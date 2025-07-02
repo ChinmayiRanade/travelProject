@@ -14,10 +14,10 @@ def save_plan(destination, attractions):
                                  num_places=len(attractions))
 
         for place in attractions:
-            new_landmark = Landmark(name=place['name'],
-                                address=place['address'],
-                                rating=place['rating'],
-                                url=place["url"])
+            new_landmark = Landmark(name=place['name'], 
+                                    address=place['address'],
+                                    rating=place['rating'],
+                                    url=place["url"])
 
             new_travel_plan.landmarks.append(new_landmark)
 
@@ -65,7 +65,7 @@ def view_saved_plan():
 def check_db_for_destination(destination_name):
     """
     Checks the database for a previously saved plan for a destination.
-    
+  
     Args:
         destination_name (str): The name of the city to check.
         
@@ -73,7 +73,7 @@ def check_db_for_destination(destination_name):
         list: A list of attraction dictionaries if found, otherwise None.
     """
     with SessionLocal() as db:
-        # Query for the most recent plan for this destination (case-insensitive)
+        # Query for most recent plan for this destination (case-insensitive)
         # We order by ID descending and take the first one.
         plan = db.query(Travel).options(
             joinedload(Travel.landmarks)
@@ -159,7 +159,6 @@ def plan_new_trip():
         save_plan(destination, attractions)
     else:
         print("Sorry, could not generate an itinerary at this time.")
-
 
 
 def show_menu():
