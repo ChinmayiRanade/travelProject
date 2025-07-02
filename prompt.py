@@ -1,7 +1,6 @@
 import os
 import google.generativeai as genai
 
-
 genai.configure(api_key=os.getenv("GENAI_KEY"))
 
 
@@ -18,18 +17,6 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
     Returns:
         str: The generated itinerary text.
     """
-    # attractions = get_attractions(destination, num_days)
-
-
-    # print("\n📍 Top attractions from Yelp:\n")
-
-    # for i, place in enumerate(attractions, 1):
-    #     print(f"{i}. {place['name']}")
-    #     print(f"   📍 Address: {place['address']}")
-    #     print(f"   ⭐ Rating: {place['rating']}")
-    #     print(f"   🔗 More info: {place['url']}\n")
-    
-    # Create a formatted string of attractions for the prompt
     names = []
     for place in attractions:
         line = f"- {place['name']} ({place['address']}, Rating: {place['rating']})"
@@ -51,16 +38,15 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
         f"- Recommend a local meal (e.g., lunch/dinner) with cuisine type.\n"
         f"- Suggest an evening experience.\n"
         f"- Use one local-language greeting or phrase each day.\n"
-        f"- 💰 For each day, estimate how much the user might spend on: attraction tickets, food, transport, and extras. "
+        f"""- 💰 For each day, estimate how much the user might spend on: attraction tickets
+        , food, transport, and extras. """
         f"Make sure the total stays within ${budget}.\n\n"
         f"Use friendly tone, clear structure, and format the output with 'Day 1', 'Day 2', etc."
     )
 
     model = genai.GenerativeModel(
         model_name="gemini-1.5-flash",
-        system_instruction=
-        "You are a helpful travel planner. Your tone is concise, warm, and culturally aware.",
+        system_instruction="You are a helpful travel planner. Your tone is concise, warm, and culturally aware.",
     )
     response = model.generate_content(prompt)
-
     return response.text
