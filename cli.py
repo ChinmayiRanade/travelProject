@@ -10,7 +10,9 @@ def save_plan(destination, attractions):
     Saves the travel plan and attractions to database
     """
     with SessionLocal() as db:
-        new_travel_plan = Travel(destination=destination, num_places=len(attractions))
+        new_travel_plan = Travel(
+            destination=destination,
+            num_places=len(attractions))
 
         for place in attractions:
             new_landmark = Landmark(
