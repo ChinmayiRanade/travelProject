@@ -107,6 +107,12 @@ def plan_new_trip():
     interests = input(
         "What are some of your interests (e.g., history, food, coding, music)? "
     )
+    budget = input("What is your approximate daily budget in USD? ")
+    try:
+        budget = int(budget)
+    except ValueError:
+        print("Please enter a valid number for your budget.")
+        return
 
     try:
         num_days = int(days)
@@ -144,7 +150,7 @@ def plan_new_trip():
     # to generate itinerary and save the new plan
     print("\n🤖 Generating your personalized itinerary with Gemini AI...")
     itinerary_text = get_itinerary(destination, num_days, interests,
-                                   attractions)
+                                   attractions, budget)
 
     if itinerary_text:
         print("\n✨ Your Custom Itinerary ✨")
