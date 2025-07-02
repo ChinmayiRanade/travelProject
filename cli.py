@@ -88,7 +88,8 @@ def check_db_for_destination(destination_name):
 
         if plan:
             print(
-                f"\n💡 Found previously saved plan for {plan.destination}! Using saved attractions."
+                f"\n💡 Found previously saved plan for {plan.destination}!"
+                f"Using saved attractions."
             )
             # Reconstruct the attractions list from the database records
             attractions = []
@@ -137,7 +138,6 @@ def plan_new_trip():
             f"\n🔎 No saved data found. "
             f"Finding attractions in {destination} via Yelp API..."
         )
-
 
         attractions = get_attractions(destination, num_days)
 
