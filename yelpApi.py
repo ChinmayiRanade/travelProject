@@ -31,7 +31,7 @@ def get_attractions(city, num_days):
 
     # Custom request based on the city and number of days for visit or more to give ai more choice
 
-    limit = min(num_days * 2, 20)
+    limit = max(num_days * 2, 10)
 
     params = {
         "location": city,
