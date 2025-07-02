@@ -13,10 +13,12 @@ def save_plan(destination, attractions):
         new_travel_plan = Travel(destination=destination, num_places=len(attractions))
 
         for place in attractions:
-            new_landmark = Landmark(name=place['name'],
-                                    address=place['address'],
-                                    rating=place['rating'],
-                                    url=place["url"])
+            new_landmark = Landmark(
+                name=place["name"],
+                address=place["address"],
+                rating=place["rating"],
+                url=place["url"],
+            )
 
             new_travel_plan.landmarks.append(new_landmark)
 
@@ -135,8 +137,7 @@ def plan_new_trip():
     # if not in DB, call the Yelp API
     if not attractions:
         print(
-            f"\n🔎 No saved data found."
-            "Finding top attractions in {destination} via Yelp API..."
+            f"\n🔎 No saved data found. Finding top attractions in {destination} via Yelp API..."
         )
         attractions = get_attractions(destination, num_days)
 
@@ -156,8 +157,9 @@ def plan_new_trip():
 
     # to generate itinerary and save the new plan
     print("\n🤖 Generating your personalized itinerary with Gemini AI...")
-    itinerary_text = get_itinerary(destination, num_days, interests,
-                                   attractions, budget)
+    itinerary_text = get_itinerary(
+        destination, num_days, interests, attractions, budget
+    )
 
     if itinerary_text:
         print("\n✨ Your Custom Itinerary ✨")
@@ -201,9 +203,7 @@ def main():
             break
 
         else:
-            print(
-                "Invalid option, type 0 to see menu again.\nChoose 0, 1, 2, 3"
-            )
+            print("Invalid option, type 0 to see menu again.\nChoose 0, 1, 2, 3")
 
 
 if __name__ == "__main__":

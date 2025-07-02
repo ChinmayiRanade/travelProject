@@ -52,15 +52,16 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
         f"Avoid long descriptions. Use a friendly and concise tone. "
         f"Include one local-language phrase or greeting each day."
         f"Each day must include:\n"
-        f"- Morning, afternoon, and evening activity (with time suggestions).\n"
-        f"- Mention which attraction is visited and when.\n"
-        f"- Recommend a local meal (e.g., lunch/dinner) with cuisine type.\n"
-        f"- Suggest an evening experience.\n"
-        f"- Use one local-language greeting or phrase each day.\n"
-        f"- 💰 For each day, estimate how much the user might spend on: attraction tickets, food, transport, and extras. "
+        f"Morning, afternoon, and evening activity (with time suggestions).\n"
+        f"Mention which attraction is visited and when.\n"
+        f"Recommend a local meal (e.g., lunch/dinner) with cuisine type.\n"
+        f"Suggest an evening experience.\n"
+        f"Use one local-language greeting or phrase each day.\n"
+        f"💰For each day, estimate how much the user might spend on: "
+        "attraction tickets, food, transport, and extras. "
         f"Make sure the total stays within ${budget}.\n\n"
         f"Use friendly tone, clear structure, and format the output with 'Day 1', 'Day 2', etc."
-        )
+    )
 
     model = genai.GenerativeModel(
         model_name="gemini-1.5-flash",
