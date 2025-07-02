@@ -1,8 +1,9 @@
 from yelpApi import get_attractions
 from prompt import generate_itinerary
 
+
 def show_menu():
-  print("\nBon Voyage: Your Travel Planning Assistant!")
+    print("\nBon Voyage: Your Travel Planning Assistant!")
   print("0. Show menu again")
   print("1. Plan a new trip")
   print("2. Exit")
@@ -15,7 +16,7 @@ def main():
 
     if choice == "0":
       show_menu()
-    
+
     elif choice == "1":
       destination = input("Enter a city for your travel itinerary: ")
       days = input("How many days are you traveling for? ")
