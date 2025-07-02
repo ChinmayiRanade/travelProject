@@ -30,7 +30,7 @@ def get_attractions(city, num_days):
     url = "https://api.yelp.com/v3/businesses/search"
     headers = {"Authorization": f"Bearer {API_KEY}"}
 
-    # Custom request based on the city and 
+    # Custom request based on the city and
     # number of days for visit or more to give ai more choice
     limit = max(num_days * 2, 10)
 
