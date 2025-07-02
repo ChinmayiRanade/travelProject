@@ -14,7 +14,7 @@ def save_plan(destination, attractions):
                                  num_places=len(attractions))
 
         for place in attractions:
-            new_landmark = Landmark(name=place['name'], 
+            new_landmark = Landmark(name=place['name'],
                                     address=place['address'],
                                     rating=place['rating'],
                                     url=place["url"])
@@ -68,7 +68,7 @@ def check_db_for_destination(destination_name):
 
     Args:
         destination_name (str): The name of the city to check.
-        
+ 
     Returns:
         list: A list of attraction dictionaries if found, otherwise None.
     """
@@ -106,7 +106,7 @@ def plan_new_trip():
     destination = input("Enter a city for your travel itinerary: ")
     days = input("How many days are you traveling for? ")
     interests = input(
-        "What are some of your interests (e.g., history, food, coding, music)? "
+        "What are some of your interests (history, food, coding, music)? "
     )
     budget = input("What is your approximate daily budget in USD? ")
     try:
