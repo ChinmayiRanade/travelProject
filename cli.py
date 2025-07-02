@@ -10,7 +10,7 @@ def show_menu():
 
 
 def main():
-  show_menu()
+    show_menu()
 
   while True:
     choice = input("\nEnter your choice: ")
@@ -35,7 +35,7 @@ def main():
         break
     else:
       print("Invalid option, type 0 to see menu again.")
-    
+  
 
 if __name__ == "__main__":
     main()
