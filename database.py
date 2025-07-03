@@ -42,8 +42,4 @@ class Landmark(Base):
 
 def create_db_and_tables():
     # Function to create the database and tables if they don't exist
-<<<<<<< HEAD
     Base.metadata.create_all(bind=engine)
-=======
-    Base.metadata.create_all(bind=engine)
->>>>>>> b9492f5 (update cli.py and database.py)
