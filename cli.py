@@ -77,7 +77,7 @@ def view_all_plans():
         if not all_plans:
             print("\nNo travel plans have been saved yet.")
             return
-        
+
         print("\n--- All Saved Travel Plans ---")
         for plan in all_plans:
             print(f"  ID: {plan.id:<3} | Destination: {plan.destination}")
