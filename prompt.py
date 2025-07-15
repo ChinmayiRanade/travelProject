@@ -2,8 +2,6 @@ import os
 
 
 
-
-
 def get_itinerary(destination, num_days, interest, attractions, budget):
     """
     Generates a travel itinerary using a generative AI model.
