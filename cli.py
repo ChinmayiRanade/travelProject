@@ -10,7 +10,9 @@ def save_plan(destination, attractions):
     Saves the travel plan and attractions to database
     """
     with SessionLocal() as db:
-        new_travel_plan = Travel(destination=destination, num_places=len(attractions))
+        new_travel_plan = Travel(
+            destination=destination,
+            num_places=len(attractions))
 
         for place in attractions:
             new_landmark = Landmark(
@@ -35,7 +37,8 @@ def view_saved_plan():
     """
 
     try:
-        plan_id = int(input("Enter the id of the travel plan you want to view: "))
+        plan_id = int(input(
+            "Enter the id of the travel plan you want to view: "))
     except ValueError:
         print("Invalid ID. Please enter a number.")
         return
@@ -63,6 +66,23 @@ def view_saved_plan():
             print(f"     ⭐ Rating: {landmark.rating}")
             print(f"     🔗 More info: {landmark.url}\n")
         print("--- End of Plan ---")
+
+
+def view_all_plans():
+    """Retrieves and displays a summary of all saved travel plans."""
+    with SessionLocal() as db:
+        # Query for all plans, ordering by the most recent first.
+        all_plans = db.query(Travel).order_by(Travel.id.desc()).all()
+
+        if not all_plans:
+            print("\nNo travel plans have been saved yet.")
+            return
+
+        print("\n--- All Saved Travel Plans ---")
+        for plan in all_plans:
+            print(f"  ID: {plan.id:<3} | Destination: {plan.destination}")
+        print("------------------------------")
+        print("To see details, choose option 2 and enter a plan ID.")
 
 
 def check_db_for_destination(destination_name):
@@ -155,7 +175,7 @@ def plan_new_trip():
     print("\n📍 Here are the attractions we'll use for your itinerary:\n")
     for i, place in enumerate(attractions, 1):
         print(f"{i}. {place['name']}")
-        print(f"   ⭐ Rating: {place['rating']} | 📍 Address: {place['address']}")
+        print(f"  ⭐ Rating: {place['rating']} | 📍 Address: {place['address']}")
 
     # to generate itinerary and save the new plan
     print("\n🤖 Generating your personalized itinerary with Gemini AI...")
@@ -175,10 +195,13 @@ def plan_new_trip():
 
 def show_menu():
     print("\n✈️ Bon Voyage: Your Personal Travel Planner ✈️")
+    print("---------------------------------------------")
     print("0. Show Menu Again")
     print("1. Plan a New Trip")
-    print("2. View a Saved Trip")
-    print("3. Exit")
+    print("2. View a specific Saved Trip")
+    print("3. View all saved trips")
+    print("4. Exit")
+    print("---------------------------------------------")
 
 
 def main():
@@ -201,11 +224,16 @@ def main():
             show_menu()
 
         elif choice == "3":
+            view_all_plans()
+            show_menu()
+
+        elif choice == "4":
             print("Bon Voyage!")
             break
 
         else:
-            print("Invalid option, type 0 to see menu again.\nChoose 0, 1, 2, 3")
+            print("""Invalid option, type 0 to see menu again.
+            Choose 0, 1, 2, 3, 4""")
 
 
 if __name__ == "__main__":

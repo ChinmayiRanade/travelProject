@@ -1,0 +1,35 @@
+name: Tests
+on: push
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11.3
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest 
+          pip install coverage
+
+      - name: Run tests with pytest
+        run: pytest
+
+      - name: Check code coverage
+        run: |
+          python -m coverage run -m pytest
+          python -m coverage report
+          python -m coverage html
+
+      - name: Archive code coverage HTML Report
+        uses: actions/upload-artifact@v4
+        with: 
+          name: code-coverage-report
+          path: htmlcov

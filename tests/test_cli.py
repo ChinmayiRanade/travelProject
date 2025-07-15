@@ -115,14 +115,14 @@ class TestLCliFunctions(unittest.TestCase):
         result = view_saved_plan()  # should not raise
         self.assertIsNone(result)
 
-    @patch("builtins.input", side_effect=["Paris", "two", "food"])
+    @patch("builtins.input", side_effect=["Paris", "two", "food", "200"])
     def test_plan_new_trip_invalid_days(self, mock_input):
         with patch("cli.check_db_for_destination"), patch("cli.get_attractions"), patch(
             "cli.get_itinerary"
         ), patch("cli.save_plan"):
             plan_new_trip()  # Should handle and print error without crash
 
-    @patch("builtins.input", side_effect=["Paris", "2", "food"])
+    @patch("builtins.input", side_effect=["Paris", "2", "food", "200"])
     @patch("cli.get_itinerary", return_value=None)
     @patch(
         "cli.get_attractions",
