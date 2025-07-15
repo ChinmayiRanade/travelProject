@@ -55,5 +55,10 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
         Your tone is concise, warm, """
         "and culturally aware.",
     )
-    response = model.generate_content(prompt)
-    return response.text
+
+    try:
+        response = model.generate_content(prompt)
+        return response.text or "Itinerary could not be generated."
+    except Exception as e:
+        print(f"AI generation failed:", {e})
+        return None
