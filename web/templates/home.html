@@ -1,0 +1,113 @@
+<!-- <!DOCTYPE html>
+<html>
+    <head>
+        <title>TESTING HOME ROUTE</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <h1>CLI App</h1>
+        <div id="card-container"></div>
+        <script src="{{ url_for('static', filename='item.js') }}"></script>
+
+        <button onclick="loadData()">Load Paris data</button>
+    </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Travel Planner</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-map-marked-alt"></i>
+                    TravelPlan
+                </div>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#plans">My Plans</a></li>
+                        <li><a href="#explore">Explore</a></li>
+                        <li><a href="#profile">Profile</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Plan Your Perfect Journey</h1>
+                <p>Discover amazing destinations and create unforgettable travel experiences</p>
+            </section>
+
+            <!-- Form Section -->
+            <section class="form-section">
+                <h2 class="form-title">
+                    <i class="fas fa-plus-circle"></i>
+                    Create New Travel Plan
+                </h2>
+                <form id="travelForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input type="text" id="destination" name="destination" placeholder="Enter destination" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">Duration (days)</label>
+                            <input type="number" id="duration" name="duration" min="1" max="30" placeholder="7" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="budget">Budget ($)</label>
+                            <input type="number" id="budget" name="budget" min="0" placeholder="1000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="travelers">Number of Travelers</label>
+                            <select id="travelers" name="travelers" required>
+                                <option value="">Select...</option>
+                                <option value="1">Solo (1)</option>
+                                <option value="2">Couple (2)</option>
+                                <option value="3-4">Small Group (3-4)</option>
+                                <option value="5+">Large Group (5+)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-magic"></i>
+                        Generate Travel Plan
+                    </button>
+                </form>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Creating your perfect travel plan...</p>
+                </div>
+            </section>
+
+            <!-- Travel Plans Section -->
+            <section class="plans-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bookmark"></i>
+                    Your Saved Travel Plans
+                </h2>
+                
+                <div class="plans-grid" id="plansGrid">
+                    
+                </div>
+            </section>
+        </div>
+    </main>
+
+   <script src="{{ url_for('static', filename='item.js') }}"></script>
+</body>
+</html>
