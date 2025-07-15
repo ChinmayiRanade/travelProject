@@ -10,9 +10,7 @@ def save_plan(destination, attractions):
     Saves the travel plan and attractions to database
     """
     with SessionLocal() as db:
-        new_travel_plan = Travel(
-            destination=destination,
-            num_places=len(attractions))
+        new_travel_plan = Travel(destination=destination, num_places=len(attractions))
 
         for place in attractions:
             new_landmark = Landmark(
@@ -37,8 +35,7 @@ def view_saved_plan():
     """
 
     try:
-        plan_id = int(input(
-            "Enter the id of the travel plan you want to view: "))
+        plan_id = int(input("Enter the id of the travel plan you want to view: "))
     except ValueError:
         print("Invalid ID. Please enter a number.")
         return
@@ -76,13 +73,15 @@ def view_all_plans():
 
         if not all_plans:
             print("\nNo travel plans have been saved yet.")
-            return
+            return []
 
         print("\n--- All Saved Travel Plans ---")
         for plan in all_plans:
             print(f"  ID: {plan.id:<3} | Destination: {plan.destination}")
         print("------------------------------")
         print("To see details, choose option 2 and enter a plan ID.")
+
+        return all_plans
 
 
 def check_db_for_destination(destination_name):
@@ -232,8 +231,10 @@ def main():
             break
 
         else:
-            print("""Invalid option, type 0 to see menu again.
-            Choose 0, 1, 2, 3, 4""")
+            print(
+                """Invalid option, type 0 to see menu again.
+            Choose 0, 1, 2, 3, 4"""
+            )
 
 
 if __name__ == "__main__":
