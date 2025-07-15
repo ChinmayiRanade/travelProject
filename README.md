@@ -143,3 +143,6 @@ Attractions:
 ```
 5. **Exit the Application**
 From the main menu, enter 3 to close the program.
+
+[![Tests](https://github.com/ChinmayiRanade/travelProject/actions/workflows/tests.yml/badge.svg)](https://github.com/ChinmayiRanade/travelProject/actions/workflows/tests.yml)
+[![Check Style](https://github.com/ChinmayiRanade/travelProject/actions/workflows/style-check.yml/badge.svg)](https://github.com/ChinmayiRanade/travelProject/actions/workflows/style-check.yml)
