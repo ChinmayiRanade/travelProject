@@ -20,21 +20,13 @@ def save_plan(destination, attractions):
                 url=place["url"],
             )
 
-    for place in attractions:
-        landmark = Landmark(
-            name=place["name"],
-            address=place["address"],
-            rating=place["rating"],
-            url=place["url"],
-            travel_id=travel.id,
-        )
-        db.add(landmark)
+            new_travel_plan.landmarks.append(new_landmark)
 
-    db.commit()
-    if not db_provided:
-        db.close()
+        db.add(new_travel_plan)
+        db.commit()
+        db.refresh(new_travel_plan)
 
-    print(f"✅Your travel plan has been saved with ID: {travel.id}")
+    print(f"\n✅Your travel plan has been saved with ID: {new_travel_plan.id}")
 
 
 def view_saved_plan():

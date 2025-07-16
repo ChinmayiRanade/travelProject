@@ -1,17 +1,16 @@
-// Simple form handling
+
+// Form submission: triggers new trip planning
 document.getElementById('travelForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
+
     const loading = document.getElementById('loading');
     const form = this;
-    
-    // Get values from the form
+
     const destination = document.getElementById("destination").value;
     const duration = document.getElementById("duration").value;
     const budget = document.getElementById("budget").value;
     const travelers = document.getElementById("travelers").value;
 
-    // Store them in an object
     const formData = {
         destination: destination,
         duration: parseInt(duration),
@@ -19,23 +18,76 @@ document.getElementById('travelForm').addEventListener('submit', function(e) {
         travelers: travelers
     };
 
-    // Show loading
     loading.style.display = 'block';
     form.style.display = 'none';
 
-    console.log("Making api call")
-    // Make API call
-    plan_new_trip(formData)
-    
-    // Simulate API call
-    setTimeout(() => {
-        loading.style.display = 'none';
-        form.style.display = 'block';
-        form.reset();
-        alert('Travel plan created successfully!');
-    }, 2000);
+    plan_new_trip(formData);
 });
 
+// Show currency preview when typing destination
+document.getElementById('destination').addEventListener('input', debounce(function(e) {
+    const destination = e.target.value.trim();
+    if (destination.length > 2) {
+        showCurrencyPreview(destination);
+    } else {
+        hideDestinationPreview();
+    }
+}, 300));
+
+function showCurrencyPreview(destination) {
+    const existingPreview = document.querySelector('.destination-preview');
+    if (existingPreview) existingPreview.remove();
+
+    const destinationGroup = document.getElementById('destination').closest('.form-group');
+    const preview = document.createElement('div');
+    preview.className = 'destination-preview';
+    preview.innerHTML = `
+        <div class="preview-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Loading exchange rate...</span>
+        </div>
+    `;
+    destinationGroup.appendChild(preview);
+
+    fetch(`/api/exchange_rate/${encodeURIComponent(destination)}`)
+        .then(r => r.json())
+        .then(exchangeData => {
+            if (exchangeData.error) {
+                preview.innerHTML = '<span class="error">Exchange rate unavailable</span>';
+            } else {
+                preview.innerHTML = `
+                    <div class="compact-exchange">
+                        <div class="exchange-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <span class="exchange-rate">${exchangeData.rate}</span>
+                        <span class="currency-bubble">${exchangeData.currency}</span>
+                    </div>
+                `;
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching exchange rate:', err);
+            preview.innerHTML = '<span class="error">Exchange rate unavailable</span>';
+        });
+}
+
+function hideDestinationPreview() {
+    const preview = document.querySelector('.destination-preview');
+    if (preview) {
+        preview.remove();
+    }
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+// Plan new trip, show only the generated itinerary (no weather/currency alert)
 function plan_new_trip(data) {
     fetch('/api/plan_new_trip', {
         method: 'POST',
@@ -44,41 +96,96 @@ function plan_new_trip(data) {
         },
         body: JSON.stringify(data)
     })
-    .then(res => res.json())
-    .then(response => {
-        if (response.error) {
-            alert("Error: " + response.error);
-        } else {
-            alert("🎉 Itinerary created!\n" + response.itinerary);
-        }
-    })
-    .catch(err => {
-        console.error('Error:', err);
-        alert("Something went wrong while creating the travel plan.");
-    });
+        .then(res => res.json())
+        .then(response => {
+            const loading = document.getElementById('loading');
+            const form = document.getElementById('travelForm');
+            loading.style.display = 'none';
+            form.style.display = 'block';
+
+            if (response.error) {
+                alert("Error: " + response.error);
+            } else {
+                alert(`🎉 Itinerary created!\n\n${response.itinerary}`);
+                form.reset();
+                hideDestinationPreview();
+
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            const loading = document.getElementById('loading');
+            const form = document.getElementById('travelForm');
+            loading.style.display = 'none';
+            form.style.display = 'block';
+            alert("Something went wrong while creating the travel plan.");
+        });
 }
 
 function view_saved_plan(id) {
-    fetch(`/api/view_plan/${id}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-    })
-    .then(res => res.json())
-    .then(response => {
-        if (response.error) {
-            alert("Error: " + response.error);
-        } else {
-        }
-    })
-    .catch(err => {
-        console.error('Error:', err);
-        alert("Something went wrong while creating the travel plan.");
-    });
+    fetch(`/api/view_plan/${id}`)
+        .then(res => res.json())
+        .then(response => {
+            if (response.error) {
+                alert("Error: " + response.error);
+            } else {
+                console.log("Plan details:", response);
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            alert("Something went wrong while retrieving the travel plan.");
+        });
 }
 
+// Create saved plan card — no weather or currency
+function createPlanCard(detail) {
+    const attractions = detail.attractions || [];
+    const attractionsHTML = attractions.slice(0, 5).map(
+        a => `<span class="landmark-tag">${a.name}</span>`
+    ).join("");
 
+    const planCard = `
+        <div class="plan-card" data-plan-id="${detail.plan_id}">
+            <div class="plan-header">
+                <div class="plan-destination">
+                    <i class="fas fa-map-marker-alt"></i>
+                    ${detail.destination}
+                </div>
+                <div class="plan-rating">
+                    <i class="fas fa-star"></i>
+                    <span>${averageRating(attractions)}</span>
+                </div>
+            </div>
+            <div class="plan-details">
+                <div class="plan-detail">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>${detail.num_attractions} places</span>
+                </div>
+                <div class="plan-detail">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>~$${estimateBudget(attractions)}</span>
+                </div>
+                <div class="plan-detail">
+                    <i class="fas fa-map-signs"></i>
+                    <span>${attractions.length} attractions</span>
+                </div>
+            </div>
+            <div class="plan-landmarks">
+                <div class="landmarks-title">Top Attractions:</div>
+                <div class="landmarks-list">
+                    ${attractionsHTML}
+                </div>
+            </div>
+        </div>
+    `;
+    document.getElementById("plansGrid").insertAdjacentHTML("beforeend", planCard);
+}
+
+// On page load: display all saved plans (with no weather or currency)
 document.addEventListener("DOMContentLoaded", () => {
     fetch('/api/view_all_plans')
         .then(res => res.json())
@@ -95,50 +202,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 fetch(`/api/view_plan/${plan.id}`)
                     .then(res => res.json())
                     .then(detail => {
-                        const attractionsHTML = detail.attractions.slice(0, 5).map(
-                            a => `<span class="landmark-tag">${a.name}</span>`
-                        ).join("");
-
-                        const planCard = `
-                            <div class="plan-card">
-                                <div class="plan-header">
-                                    <div class="plan-destination">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        ${detail.destination}
-                                    </div>
-                                    <div class="plan-rating">
-                                        <i class="fas fa-star"></i>
-                                        <span>${averageRating(detail.attractions)}</span>
-                                    </div>
-                                </div>
-                                <div class="plan-details">
-                                    <div class="plan-detail">
-                                        <i class="fas fa-calendar-alt"></i>
-                                        <span>${detail.num_attractions} days</span>
-                                    </div>
-                                    <div class="plan-detail">
-                                        <i class="fas fa-dollar-sign"></i>
-                                        <span>~$${estimateBudget(detail.attractions)}</span>
-                                    </div>
-                                    <div class="plan-detail">
-                                        <i class="fas fa-users"></i>
-                                        <span>—</span>
-                                    </div>
-                                    <div class="plan-detail">
-                                        <i class="fas fa-map-signs"></i>
-                                        <span>${detail.attractions.length} places to visit</span>
-                                    </div>
-                                </div>
-                                <div class="plan-landmarks">
-                                    <div class="landmarks-title">Top Attractions:</div>
-                                    <div class="landmarks-list">
-                                        ${attractionsHTML}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-
-                        plansGrid.insertAdjacentHTML("beforeend", planCard);
+                        createPlanCard(detail);
+                    })
+                    .catch(error => {
+                        console.error("Error loading plan details:", error);
                     });
             });
         })
@@ -155,7 +222,6 @@ function averageRating(attractions) {
 }
 
 function estimateBudget(attractions) {
-    // Fake estimate per attraction. You can replace with real logic.
     const ticketCost = 20;
     return attractions.length * ticketCost;
 }
