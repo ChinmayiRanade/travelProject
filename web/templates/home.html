@@ -18,7 +18,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Travel Planner</title>
+  <title>Bon Voyage</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
@@ -28,14 +28,12 @@
             <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-map-marked-alt"></i>
-                    TravelPlan
+                    Bon Voyage
                 </div>
                 <nav>
                     <ul class="nav-links">
                         <li><a href="#home">Home</a></li>
                         <li><a href="#plans">My Plans</a></li>
-                        <li><a href="#explore">Explore</a></li>
-                        <li><a href="#profile">Profile</a></li>
                     </ul>
                 </nav>
             </div>
@@ -46,7 +44,7 @@
     <main class="main-content">
         <div class="container">
             <!-- Hero Section -->
-            <section class="hero">
+            <section class="hero" id="home">
                 <h1>Plan Your Perfect Journey</h1>
                 <p>Discover amazing destinations and create unforgettable travel experiences</p>
             </section>
@@ -94,8 +92,17 @@
                 </div>
             </section>
 
+            <!-- Generated Itinerary Section -->
+            <section class="itinerary-section" id="itinerarySection" style="display: none;">
+                <h2 class="section-title">
+                    <i class="fas fa-map"></i>
+                    Generated Itinerary
+                </h2>
+                <div id="itineraryContent" class="itinerary-content"></div>
+            </section>
+
             <!-- Travel Plans Section -->
-            <section class="plans-section">
+            <section class="plans-section" id="plans">
                 <h2 class="section-title">
                     <i class="fas fa-bookmark"></i>
                     Your Saved Travel Plans
