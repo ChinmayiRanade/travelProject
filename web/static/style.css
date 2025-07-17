@@ -280,7 +280,7 @@ html {
     background: white;
     border-radius: 20px;
     padding: 2rem;
-    margin-top: 2rem;
+    margin-bottom: 3rem;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     display: none;
 }

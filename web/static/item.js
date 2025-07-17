@@ -4,6 +4,7 @@ document.getElementById('travelForm').addEventListener('submit', async function(
     e.preventDefault();
 
     const loading = document.getElementById('loading');
+    const travelForm = document.getElementById("travelForm");
     const form = this;
 
     const destination = document.getElementById("destination").value;
@@ -19,9 +20,10 @@ document.getElementById('travelForm').addEventListener('submit', async function(
     };
 
     loading.style.display = 'block';
+    travelForm.style.display = "none";
     form.style.display = 'none';
 
-    plan_new_trip(formData);
+    await plan_new_trip(formData)
 });
 
 // Show currency preview when typing destination
@@ -88,7 +90,7 @@ function debounce(func, wait) {
 }
 
 // Plan new trip, show only the generated itinerary (no weather/currency alert)
-function plan_new_trip(data) {
+async function plan_new_trip(data) {
     fetch('/api/plan_new_trip', {
         method: 'POST',
         headers: {
@@ -98,21 +100,20 @@ function plan_new_trip(data) {
     })
         .then(res => res.json())
         .then(response => {
-            const loading = document.getElementById('loading');
-            const form = document.getElementById('travelForm');
+            const loading = document.getElementById("loading");
+            const form = document.getElementById("travelForm");
             loading.style.display = 'none';
             form.style.display = 'block';
 
             if (response.error) {
                 alert("Error: " + response.error);
             } else {
-                alert(`🎉 Itinerary created!\n\n${response.itinerary}`);
-                form.reset();
-                hideDestinationPreview();
+                const itinerarySection = document.getElementById("itinerarySection");
+                const itineraryContent = document.getElementById("itineraryContent");
 
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
+                itineraryContent.innerHTML = formatItinerary(response.itinerary);
+                itinerarySection.style.display = "block";
+                scrollToItinerary()
             }
         })
         .catch(err => {
@@ -225,3 +226,40 @@ function estimateBudget(attractions) {
     const ticketCost = 20;
     return attractions.length * ticketCost;
 }
+
+function formatItinerary(itinerary) {
+    // Replace **text** with <strong>text</strong>
+    let formatted = itinerary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Split by days and format each day
+    const days = formatted.split(/(?=\*\*Day \d+:)/);
+    
+    let formattedHtml = '';
+    
+    days.forEach((day, index) => {
+        if (day.trim()) {
+            if (index === 0) {
+                // First part (introduction)
+                let intro = day.replace(/\n/g, '<br>');
+                // Convert * to bullet points in intro
+                intro = intro.replace(/^\* /gm, '• ');
+                formattedHtml += `<div class="itinerary-intro">${intro}</div>`;
+            } else {
+                // Day sections
+                let dayContent = day.replace(/\n/g, '<br>');
+                // Convert * to bullet points in day content
+                dayContent = dayContent.replace(/^\* /gm, '• ');
+                formattedHtml += `<div class="itinerary-day">${dayContent}</div>`;
+            }
+        }
+    });
+    
+    return formattedHtml;
+}
+
+function scrollToItinerary() {
+    const section = document.getElementById("itinerarySection");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  }
