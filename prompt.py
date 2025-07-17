@@ -1,8 +1,11 @@
 import os
-import google.generativeai as genai
+import openai
+from dotenv import load_dotenv
 from weather import get_weather_forecast  # Import your weather function
 
-genai.configure(api_key=os.getenv("GENAI_KEY"))
+load_dotenv()
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def get_itinerary(destination, num_days, interest, attractions, budget):
     """
@@ -61,16 +64,20 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
         f"Use friendly tone, clear structure, and format the output with 'Day 1', 'Day 2', etc."
     )
     
-    model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
-        system_instruction="""You are a helpful travel planner. Your tone is concise, warm, 
-        and culturally aware. Always consider weather conditions when making recommendations 
-        and provide practical advice for dealing with different weather scenarios.""",
-    )
-    
     try:
-        response = model.generate_content(prompt)
-        return response.text or "Itinerary could not be generated."
+        response = openai.ChatCompletion.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": (
+                    "You are a helpful travel planner. Your tone is concise, warm, and culturally aware. "
+                    "Always consider weather conditions when making recommendations and provide practical advice."
+                )},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=3000
+        )
+        return response.choices[0].message["content"]
     except Exception as e:
         print(f"AI generation failed: {e}")
-        return None
+        return "Itinerary could not be generated due to an error."
