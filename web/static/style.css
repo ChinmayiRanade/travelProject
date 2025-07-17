@@ -562,3 +562,22 @@ body {
         padding: 0.25rem 0.6rem;
     }
 }
+
+html, body {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.main-content {
+    overflow-y: auto;
+}
+
+.itinerary-content {
+    white-space: pre-wrap;
+    max-height: 400px;
+    overflow-y: auto;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #444;
+    padding-top: 1rem;
+}

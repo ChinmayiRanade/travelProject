@@ -1,4 +1,3 @@
-
 // Form submission: triggers new trip planning
 document.getElementById('travelForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -106,13 +105,25 @@ function plan_new_trip(data) {
             if (response.error) {
                 alert("Error: " + response.error);
             } else {
-                alert(`🎉 Itinerary created!\n\n${response.itinerary}`);
                 form.reset();
                 hideDestinationPreview();
 
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
+                const plansGrid = document.getElementById("plansGrid");
+                const itineraryCard = document.createElement("div");
+                itineraryCard.className = "plan-card";
+                itineraryCard.innerHTML = `
+                    <div class="plan-header">
+                        <div class="plan-destination">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${response.destination}
+                        </div>
+                    </div>
+                    <div class="plan-details itinerary-content">
+                        ${response.itinerary.replace(/\n/g, "<br>")}
+                    </div>
+                `;
+
+                plansGrid.insertBefore(itineraryCard, plansGrid.firstChild);
             }
         })
         .catch(err => {
@@ -141,7 +152,6 @@ function view_saved_plan(id) {
         });
 }
 
-// Create saved plan card — no weather or currency
 function createPlanCard(detail) {
     const attractions = detail.attractions || [];
     const attractionsHTML = attractions.slice(0, 5).map(
@@ -185,13 +195,12 @@ function createPlanCard(detail) {
     document.getElementById("plansGrid").insertAdjacentHTML("beforeend", planCard);
 }
 
-// On page load: display all saved plans (with no weather or currency)
 document.addEventListener("DOMContentLoaded", () => {
     fetch('/api/view_all_plans')
         .then(res => res.json())
         .then(plans => {
             const plansGrid = document.getElementById("plansGrid");
-            plansGrid.innerHTML = ""; // Clear placeholder content
+            plansGrid.innerHTML = "";
 
             if (!Array.isArray(plans) || plans.length === 0) {
                 plansGrid.innerHTML = "<p>No saved travel plans found.</p>";
