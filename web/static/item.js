@@ -1,5 +1,5 @@
 // Simple form handling
-document.getElementById('travelForm').addEventListener('submit', function(e) {
+document.getElementById('travelForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const loading = document.getElementById('loading');
@@ -25,38 +25,81 @@ document.getElementById('travelForm').addEventListener('submit', function(e) {
 
     console.log("Making api call")
     // Make API call
-    plan_new_trip(formData)
-    
-    // Simulate API call
-    setTimeout(() => {
-        loading.style.display = 'none';
-        form.style.display = 'block';
-        form.reset();
-        alert('Travel plan created successfully!');
-    }, 2000);
+    await plan_new_trip(formData)
+    loading.style.display = 'none';
+    form.style.display = 'block';
+    form.reset();
 });
 
-function plan_new_trip(data) {
-    fetch('/api/plan_new_trip', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(response => {
+async function plan_new_trip(data) {
+    document.getElementById("loading").style.display = "block";
+
+    try {
+        const res = await fetch('/api/plan_new_trip', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const response = await res.json();
+
+        document.getElementById("loading").style.display = "none";
+
         if (response.error) {
-            alert("Error: " + response.error);
+            alert("Error:" + response.error);
         } else {
-            alert("🎉 Itinerary created!\n" + response.itinerary);
-        }
-    })
-    .catch(err => {
-        console.error('Error:', err);
+            const itinerarySection = document.getElementById("itinerarySection");
+            const itineraryContent = document.getElementById("itineraryContent");
+
+            itineraryContent.innerHTML = formatItinerary(response.itinerary);
+            itinerarySection.style.display = "block";
+            scrollToItinerary()
+        } 
+    } catch (error) {
+        console.error("Error:", error);
         alert("Something went wrong while creating the travel plan.");
-    });
+        document.getElementById("loading").style.display = "none";
+    }
 }
+
+function formatItinerary(itinerary) {
+    // Replace **text** with <strong>text</strong>
+    let formatted = itinerary.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Split by days and format each day
+    const days = formatted.split(/(?=\*\*Day \d+:)/);
+    
+    let formattedHtml = '';
+    
+    days.forEach((day, index) => {
+        if (day.trim()) {
+            if (index === 0) {
+                // First part (introduction)
+                let intro = day.replace(/\n/g, '<br>');
+                // Convert * to bullet points in intro
+                intro = intro.replace(/^\* /gm, '• ');
+                formattedHtml += `<div class="itinerary-intro">${intro}</div>`;
+            } else {
+                // Day sections
+                let dayContent = day.replace(/\n/g, '<br>');
+                // Convert * to bullet points in day content
+                dayContent = dayContent.replace(/^\* /gm, '• ');
+                formattedHtml += `<div class="itinerary-day">${dayContent}</div>`;
+            }
+        }
+    });
+    
+    return formattedHtml;
+}
+
+function scrollToItinerary() {
+    const section = document.getElementById("itinerarySection");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  }
 
 function view_saved_plan(id) {
     fetch(`/api/view_plan/${id}`, {
@@ -67,6 +110,8 @@ function view_saved_plan(id) {
     })
     .then(res => res.json())
     .then(response => {
+        console.log("Saved plan:", response)
+
         if (response.error) {
             alert("Error: " + response.error);
         } else {
@@ -74,7 +119,7 @@ function view_saved_plan(id) {
     })
     .catch(err => {
         console.error('Error:', err);
-        alert("Something went wrong while creating the travel plan.");
+        alert("Something went wrong while retrieving the travel plan.");
     });
 }
 
