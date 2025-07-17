@@ -2,6 +2,8 @@ import os
 import openai
 from dotenv import load_dotenv
 from weather import get_weather_forecast  # Import your weather function
+from dotenv import load_dotenv
+load_dotenv()
 
 load_dotenv()
 

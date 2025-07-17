@@ -1,3 +1,11 @@
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
 from flask import Flask, jsonify, render_template, request
 from cli import check_db_for_destination, get_attractions, save_plan
 from prompt import get_itinerary
