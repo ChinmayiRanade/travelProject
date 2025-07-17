@@ -71,6 +71,15 @@ function showCurrencyPreview(destination) {
         });
 }
 
+document.getElementById("duration").addEventListener("input", function () {
+    const max = 5;
+    const val = parseInt(this.value, 10);
+    if (val > max) {
+        alert("Maximum duration is 5 days.");
+        // this.value = max; // optional: auto-correct the value
+    }
+});
+
 function hideDestinationPreview() {
     const preview = document.querySelector('.destination-preview');
     if (preview) {
