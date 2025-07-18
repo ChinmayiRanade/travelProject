@@ -53,7 +53,7 @@ def api_plan_new_trip():
     destination = data.get("destination")
     duration = data.get("duration")
     budget = data.get("budget")
-    travelers = data.get("travelers")
+    # travelers = data.get("travelers")
     interests = data.get("interests", "sightseeing")
 
     if not destination or not duration or not budget:

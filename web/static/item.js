@@ -10,13 +10,13 @@ document.getElementById('travelForm').addEventListener('submit', async function(
     const destination = document.getElementById("destination").value;
     const duration = document.getElementById("duration").value;
     const budget = document.getElementById("budget").value;
-    const travelers = document.getElementById("travelers").value;
+    // const travelers = document.getElementById("travelers").value;
 
     const formData = {
         destination: destination,
         duration: parseInt(duration),
         budget: parseFloat(budget),
-        travelers: travelers
+   
     };
 
     loading.style.display = 'block';
@@ -170,20 +170,7 @@ function createPlanCard(detail) {
                     <span>${averageRating(attractions)}</span>
                 </div>
             </div>
-            <div class="plan-details">
-                <div class="plan-detail">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>${detail.num_attractions} places</span>
-                </div>
-                <div class="plan-detail">
-                    <i class="fas fa-dollar-sign"></i>
-                    <span>~$${estimateBudget(attractions)}</span>
-                </div>
-                <div class="plan-detail">
-                    <i class="fas fa-map-signs"></i>
-                    <span>${attractions.length} attractions</span>
-                </div>
-            </div>
+            
             <div class="plan-landmarks">
                 <div class="landmarks-title">Top Attractions:</div>
                 <div class="landmarks-list">
