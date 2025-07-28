@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register | Bon Voyage</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="login-main">
+    <div class="login-container">
+      
+      <!-- Left Welcome Pane -->
+      <div class="login-welcome">
+        <div class="welcome-content">
+          <h1>Join <span class="highlight-text">Bon Voyage</span></h1>
+          <p>Start planning your next adventure today.</p>
+
+          <div class="features-list">
+            <div class="feature-item">
+              <div class="feature-icon-wrapper">
+                <i class="fas fa-globe"></i>
+              </div>
+              <div>
+                <h3>Discover Destinations</h3>
+                <p>Explore curated places across the globe.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon-wrapper">
+                <i class="fas fa-magic"></i>
+              </div>
+              <div>
+                <h3>Plan Smart</h3>
+                <p>Build efficient itineraries with AI support.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon-wrapper">
+                <i class="fas fa-users"></i>
+              </div>
+              <div>
+                <h3>Travel Together</h3>
+                <p>Collaborate and save plans with friends.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Register Form -->
+      <div class="login-form-section">
+        <form class="form-card" method="POST">
+          <div class="form-header">
+            <h2>Create an Account</h2>
+            <p>Join our travel community</p>
+          </div>
+
+          {% if error %}
+            <div class="message error show">
+              <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+          {% endif %}
+
+          <div class="form-group">
+            <label>Username</label>
+            <div class="input-group">
+              <input type="text" name="username" placeholder="Choose a username" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <div class="input-group">
+              <input type="email" name="email" placeholder="Enter your email" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-group">
+              <input type="password" name="password" placeholder="Create a password" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" required /> I agree to the Terms & Conditions
+            </label>
+          </div>
+
+          <button type="submit" class="login-btn">
+            <i class="fas fa-user-plus"></i> Register
+          </button>
+
+          <div class="signup-link">
+            <p>Already have an account? <a href="{{ url_for('login_page') }}">Login here</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

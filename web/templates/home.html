@@ -19,7 +19,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bon Voyage</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}" />
 </head>
 <body>
     <!-- Header -->
@@ -34,7 +34,10 @@
                     <ul class="nav-links">
                         <li><a href="#home">Home</a></li>
                         <li><a href="#plans">My Plans</a></li>
+                        <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
                     </ul>
+                   
                 </nav>
             </div>
         </div>
@@ -45,7 +48,10 @@
         <div class="container">
             <!-- Hero Section -->
             <section class="hero" id="home">
-                <h1>Plan Your Perfect Journey</h1>
+                {% if session.username %}
+                    <h1>Hello, {{ session.username }}!</h1>
+                {% endif %}
+                <h1>✈️ Wander Without Worry</h1>
                 <p>Discover amazing destinations and create unforgettable travel experiences</p>
             </section>
 
@@ -69,19 +75,6 @@
                             <label for="budget">Budget ($)</label>
                             <input type="number" id="budget" name="budget" min="0" placeholder="1000" required>
                         </div>
-                        <!--
-                        <div class="form-group">
-                            <label for="travelers">Number of Travelers</label>
-                            <select id="travelers" name="travelers" required>
-                                <option value="">Select...</option>
-                                <option value="1">Solo (1)</option>
-                                <option value="2">Couple (2)</option>
-                                <option value="3-4">Small Group (3-4)</option>
-                                <option value="5+">Large Group (5+)</option>
-                            </select>
-                        </div>
-                        -->
-
                     </div>
                     <button type="submit" class="btn">
                         <i class="fas fa-magic"></i>
