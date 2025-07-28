@@ -18,6 +18,7 @@ def save_plan(destination, attractions):
                 address=place["address"],
                 rating=place["rating"],
                 url=place["url"],
+                image_url=place.get("image_url", "")
             )
 
             new_travel_plan.landmarks.append(new_landmark)
@@ -119,6 +120,7 @@ def check_db_for_destination(destination_name):
                         "address": landmark.address,
                         "rating": landmark.rating,
                         "url": landmark.url,
+                        "image_url": landmark.image_url or "",
                     }
                 )
             return attractions

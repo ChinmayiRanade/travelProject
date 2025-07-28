@@ -977,3 +977,45 @@ body {
   gap: 1.5rem;
 }
 
+.plan-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.plan-img-placeholder {
+  width: 100%;
+  height: 180px;
+  background: #e1e5e9;
+  border-radius: 12px 12px 0 0;
+  margin-bottom: 1rem;
+}
+
+.landmark-img-tag {
+  gap: 6px;
+}
+
+.landmark-thumb {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+  margin-right: 4px;
+}
+
+.plan-img-link,
+.landmark-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.plan-img-link:hover,
+.landmark-link:hover {
+  color: #5548d9;
+  text-decoration: none;
+}

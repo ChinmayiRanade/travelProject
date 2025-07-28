@@ -9,6 +9,8 @@ from database import SessionLocal, create_db_and_tables, Travel, Landmark, User
 app = Flask(__name__)
 app.secret_key = "bonvoyage123"
 
+create_db_and_tables()
+
 # --- Exchange Rate API ---
 @app.route("/api/exchange_rate/<destination>", methods=["GET"])
 def api_get_exchange_rate(destination):
@@ -73,7 +75,8 @@ def api_view_saved_plan(plan_id):
                     "name": lm.name,
                     "address": lm.address,
                     "rating": lm.rating,
-                    "url": lm.url
+                    "url": lm.url,
+                    "image_url": lm.image_url
                 }
                 for lm in plan.landmarks
             ]
