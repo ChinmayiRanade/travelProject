@@ -129,10 +129,6 @@ def get_city_currency(city: str) -> str:
     return CITY_TO_CURRENCY.get(city_lower, "Unknown")
     
 
-currency = get_city_currency("Lisbon")
-exchange_rate = get_rate_for_city("Lisbon") if currency != "Unknown" else None
-
-print(exchange_rate)
 
 
 
