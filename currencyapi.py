@@ -108,6 +108,7 @@ def get_rate_from_usd_to(currency: str) -> str:
             return "Rate unavailable"
         
         rate = data["result"]
+        return f"1 USD = {rate:.2f} {currency}"
     
     except requests.RequestException:
         return "Rate unavailable"
