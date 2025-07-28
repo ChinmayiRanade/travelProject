@@ -61,6 +61,8 @@ def get_attractions(city, num_days):
                 "address": ", ".join(business["location"]["display_address"]),
                 "rating": business["rating"],
                 "url": business["url"],
+                "image_url": business.get("image_url")
+                
             }
         )
 

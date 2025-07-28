@@ -1,4 +1,3 @@
-
 // Form submission: triggers new trip planning
 document.getElementById('travelForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -10,13 +9,11 @@ document.getElementById('travelForm').addEventListener('submit', async function(
     const destination = document.getElementById("destination").value;
     const duration = document.getElementById("duration").value;
     const budget = document.getElementById("budget").value;
-    // const travelers = document.getElementById("travelers").value;
 
     const formData = {
         destination: destination,
         duration: parseInt(duration),
         budget: parseFloat(budget),
-   
     };
 
     loading.style.display = 'block';
@@ -151,15 +148,40 @@ function view_saved_plan(id) {
         });
 }
 
-// Create saved plan card — no weather or currency
+// -- IMAGE DISPLAY LOGIC ADDED HERE --
+
+// Placeholder image URL (customize if you like)
+const PLACEHOLDER_URL = "https://placehold.co/400x300?text=No+Image";
+
+// Create saved plan card — with image display
 function createPlanCard(detail) {
     const attractions = detail.attractions || [];
-    const attractionsHTML = attractions.slice(0, 5).map(
-        a => `<span class="landmark-tag">${a.name}</span>`
+    // Feature image at top: use the first attraction's image URL wrapped in a link to its Yelp page
+    let firstImageHtml = '';
+    if (attractions[0] && attractions[0].image_url && attractions[0].url) {
+        firstImageHtml = `
+            <a href="${attractions[0].url}" target="_blank" rel="noopener noreferrer" class="plan-img-link">
+                <img class="plan-img" src="${attractions[0].image_url}" alt="Cover image of ${attractions[0].name}" loading="lazy">
+            </a>`;
+    } else {
+        firstImageHtml = `<div class="plan-img-placeholder"></div>`;
+    }
+
+    // Each attraction tag with image thumbnail as a clickable link to its Yelp URL
+    const attractionsHTML = attractions.slice(0, 5).map(a =>
+        a.image_url && a.url
+            ? `<span class="landmark-tag landmark-img-tag">
+                  <a href="${a.url}" target="_blank" rel="noopener noreferrer" class="landmark-link">
+                      <img src="${a.image_url}" alt="${a.name}" class="landmark-thumb" loading="lazy">
+                      ${a.name}
+                  </a>
+               </span>`
+            : `<span class="landmark-tag">${a.name}</span>`
     ).join("");
 
     const planCard = `
         <div class="plan-card" data-plan-id="${detail.plan_id}">
+            ${firstImageHtml}
             <div class="plan-header">
                 <div class="plan-destination">
                     <i class="fas fa-map-marker-alt"></i>
@@ -170,7 +192,6 @@ function createPlanCard(detail) {
                     <span>${averageRating(attractions)}</span>
                 </div>
             </div>
-            
             <div class="plan-landmarks">
                 <div class="landmarks-title">Top Attractions:</div>
                 <div class="landmarks-list">
@@ -181,6 +202,7 @@ function createPlanCard(detail) {
     `;
     document.getElementById("plansGrid").insertAdjacentHTML("beforeend", planCard);
 }
+
 
 // On page load: display all saved plans (with no weather or currency)
 document.addEventListener("DOMContentLoaded", () => {
@@ -229,7 +251,7 @@ function formatItinerary(itinerary) {
     
     // Split by days and format each day
     const days = formatted.split(/(?=\*\*Day \d+:)/);
-    
+
     let formattedHtml = '';
     
     days.forEach((day, index) => {
@@ -249,13 +271,12 @@ function formatItinerary(itinerary) {
             }
         }
     });
-    
     return formattedHtml;
 }
 
 function scrollToItinerary() {
     const section = document.getElementById("itinerarySection");
     if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+        section.scrollIntoView({ behavior: "smooth" });
     }
-  }
+}

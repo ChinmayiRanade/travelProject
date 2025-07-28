@@ -34,6 +34,7 @@ class Landmark(Base):
     address = Column(String)
     rating = Column(Float)
     url = Column(String)
+    image_url = Column(String)
 
     # Foreign key to link back to the Travel table
     travel_id = Column(Integer, ForeignKey("userinput_travel.id"))

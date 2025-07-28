@@ -5,7 +5,12 @@ from database import SessionLocal, create_db_and_tables, Travel, Landmark
 from sqlalchemy.orm import joinedload
 from currencyapi import get_rate_for_city, get_city_currency
 
+
 app = Flask(__name__)
+
+# Ensure DB tables are created during app initialization
+create_db_and_tables()
+
 
 # --- Exchange Rate API ---
 @app.route("/api/exchange_rate/<destination>", methods=["GET"])
@@ -43,6 +48,7 @@ def api_get_exchange_rate(destination):
         return jsonify({
             "error": f"Failed to get exchange rate: {str(e)}"
         }), 500
+
 
 # --- Plan a new trip ---
 @app.route("/api/plan_new_trip", methods=["POST"])
@@ -95,6 +101,7 @@ def api_plan_new_trip():
     else:
         return jsonify({"error": "Could not generate an itinerary at this time."}), 500
 
+
 # --- View single saved plan ---
 @app.route("/api/view_plan/<int:plan_id>", methods=["GET"])
 def api_view_saved_plan(plan_id):
@@ -118,11 +125,13 @@ def api_view_saved_plan(plan_id):
                     "name": lm.name,
                     "address": lm.address,
                     "rating": lm.rating,
-                    "url": lm.url
+                    "url": lm.url,
+                    "image_url": lm.image_url
                 }
                 for lm in plan.landmarks
             ]
         }), 200
+
 
 # --- View all saved plan summaries ---
 @app.route("/api/view_all_plans", methods=["GET"])
@@ -142,15 +151,17 @@ def api_view_all_plans():
             for plan in all_plans
         ]), 200
 
+
 # --- Pages ---
 @app.route("/")
 def home():
     return render_template("home.html")
 
+
 @app.route("/dashboard")
 def dashboard():
     return render_template("dashboard.html")
 
+
 if __name__ == "__main__":
-    create_db_and_tables()
     app.run(debug=True)
