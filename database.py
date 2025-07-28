@@ -10,6 +10,17 @@ engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+# User table
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, nullable=False, index=True)
+    email = Column(String, unique=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+
+    # Relationship to Travel plans
+    travels = relationship("Travel", back_populates="user", cascade="all, delete-orphan")
 
 # Define the first table: Travel
 class Travel(Base):
@@ -18,6 +29,9 @@ class Travel(Base):
     id = Column(Integer, primary_key=True, index=True)
     destination = Column(String, index=True)
     num_places = Column(Integer)
+
+    user_id = Column(Integer, ForeignKey("users.id"))
+    user = relationship("User", back_populates="travels")
 
     # This creates a link to the Landmark table
     landmarks = relationship(
