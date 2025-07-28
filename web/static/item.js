@@ -19,7 +19,7 @@ document.getElementById('travelForm').addEventListener('submit', async function(
    
     };
 
-    loading.style.display = 'block';
+    loading.style.display = 'flex';
     travelForm.style.display = "none";
     form.style.display = 'none';
 
