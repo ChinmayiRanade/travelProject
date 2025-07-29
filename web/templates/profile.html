@@ -4,18 +4,51 @@
   <meta charset="UTF-8">
   <title>My Profile | Bon Voyage</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="profile-container">
-    <h2>Welcome, {{ user.username }} 👋</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
-    <div class="profile-box">
-      <p><strong>Username:</strong> {{ user.username }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
+    <!-- Header with Avatar -->
+    <div class="profile-header">
+      <div class="avatar-circle">{{ user.username[0]|upper }}</div>
+      <h1>Welcome, {{ user.username }} <span class="emoji">👋</span></h1>
+      <p>Thanks for being part of Bon Voyage!</p>
+    </div>
 
-      <a href="{{ url_for('home') }}">Go to Dashboard</a> |
-      <a href="{{ url_for('logout') }}">Logout</a>
+    <!-- Profile Details -->
+    <form method="POST" action="{{ url_for('update_profile') }}">
+  <div class="profile-details">
+    <div class="detail-item">
+      <strong>Username:</strong>
+      <input type="text" name="username" value="{{ user.username }}" required>
+    </div>
+    <div class="detail-item">
+      <strong>Email:</strong>
+      <input type="email" name="email" value="{{ user.email }}" required>
     </div>
   </div>
+
+  <div class="profile-actions">
+    <button type="submit" class="btn">Save Changes</button>
+    <a href="{{ url_for('home') }}" class="btn btn-outline">Go to Dashboard</a>
+    <a href="/logout" class="btn btn-outline">Logout</a>
+    <a href="/forgot_password" class="btn btn-outline">Change Password</a>
+  </div>
+</form>
+  </div>
+
+  <!-- Optional: FontAwesome for icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

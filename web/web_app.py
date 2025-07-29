@@ -10,6 +10,7 @@ from cli import check_db_for_destination, get_attractions, save_plan
 from prompt import get_itinerary
 from currencyapi import get_rate_for_city, get_city_currency
 from database import SessionLocal, create_db_and_tables, Travel, Landmark, User
+from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 app.secret_key = "bonvoyage123"
@@ -149,11 +150,54 @@ def dashboard():
 def profile():
     if "username" not in session:
         return redirect(url_for("login_page"))
+
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("logout"))
+
     db = SessionLocal()
-    user = db.query(User).filter_by(id=session["user_id"]).first()
+    user = db.query(User).filter_by(id=user_id).first()
     if not user:
         return redirect(url_for("logout"))
+
     return render_template("profile.html", user=user)
+@app.route("/update_profile", methods=["POST"])
+def update_profile():
+    if "user_id" not in session:
+        return redirect(url_for("login_page"))
+
+    db = SessionLocal()
+    user = db.query(User).filter_by(id=session["user_id"]).first()
+    
+    if user:
+        new_username = request.form.get("username")
+        new_email = request.form.get("email")
+
+        # Check if new email is already taken by another user
+        if new_email and new_email != user.email:
+            existing_user = db.query(User).filter(User.email == new_email, User.id != user.id).first()
+            if existing_user:
+                flash("Email already in use by another account.", "error")
+                db.close()
+                return redirect(url_for("profile"))
+
+        # Proceed to update username and email
+        try:
+            if new_username:
+                user.username = new_username
+                session["username"] = new_username
+
+            if new_email:
+                user.email = new_email
+
+            db.commit()
+            flash("Profile updated successfully!", "success")
+        except IntegrityError:
+            db.rollback()
+            flash("An error occurred while updating your profile.", "error")
+
+    db.close()
+    return redirect(url_for("profile"))
 
 # --- Auth Pages ---
 @app.route("/login_page", methods=["GET"])
@@ -248,10 +292,17 @@ def register():
 
             db = SessionLocal()
 
+            # Check for duplicate username
             if db.query(User).filter_by(username=username).first():
                 db.close()
-                return render_template("register.html", error="Username already exists")
+                return render_template("login.html", register_error="Username already exists")
 
+            # Check for duplicate email
+            if db.query(User).filter_by(email=email).first():
+                db.close()
+                return render_template("login.html", register_error="Email already registered")
+
+            # All good, create new user
             new_user = User(username=username, email=email, hashed_password=password)
             db.add(new_user)
             db.commit()
@@ -267,6 +318,7 @@ def register():
             return "500 Internal Server Error", 500
 
     return render_template("register.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
