@@ -1,9 +1,17 @@
 import requests
 import os
-
+from dotenv import load_dotenv
 
 API_KEY = os.getenv("EXCHANGE_RATE_API_KEY")
 BASE_URL = "https://api.exchangerate.host/convert"
+
+print(f"--- CURRENCY API DEBUG ---")
+if API_KEY:
+    # Print only a portion of the key for security
+    print(f"API Key Found. Starts with: {API_key[:4]}...")
+else:
+    print("API Key NOT FOUND. Check environment variables on Render.")
+print(f"--------------------------")
 
 CITY_TO_CURRENCY = {
     "geneva": "CHF", "zurich": "CHF", "bern": "CHF", "basel": "CHF",
