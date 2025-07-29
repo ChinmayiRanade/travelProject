@@ -253,43 +253,18 @@ def forgot_password():
                 flash("Password reset successful. Please login.", "success")
                 return redirect(url_for("login"))
 
-
-
     return render_template("forgot_password.html", step=step, error=error)
-
-
-# @app.route('/reset_password', methods=["GET", "POST"])
-# def reset_password():
-#     user_id = session.get("reset_user_id")
-#     if not user_id:
-#         return redirect(url_for("login_page"))
-
-#     db = SessionLocal()
-#     user = db.query(User).filter_by(id=user_id).first()
-
-#     if request.method == "POST":
-#         new_password = request.form.get("new_password")
-#         if new_password:
-#             user.hashed_password = generate_password_hash(new_password)
-#             db.commit()
-#             session.pop("reset_user_id", None)  # Clear reset session
-#             return redirect(url_for("login_page"))
-#         else:
-#             return render_template("reset_password.html", error="Please enter a new password.")
-
-#     return render_template("reset_password.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
+        db = SessionLocal()
         try:
             username = request.form["username"]
             email = request.form["email"]
             password = generate_password_hash(request.form["password"])
 
             print(f"[DEBUG] Registering user: {username}, {email}")
-
-            db = SessionLocal()
 
             # Check for duplicate username
             if db.query(User).filter_by(username=username).first():
@@ -305,18 +280,31 @@ def register():
             new_user = User(username=username, email=email, hashed_password=password)
             db.add(new_user)
             db.commit()
+
             db.refresh(new_user)
+
+
+            user_id = new_user.id
+            user_name = new_user.username
+
             db.close()
 
             session["user_id"] = new_user.id
             session["username"] = username
+            flash("Registration successful!", "success")
             return redirect(url_for("home"))
 
         except Exception as e:
             import traceback
             print("🔥 Registration error:")
             traceback.print_exc()
+            db.rollback()
             return "500 Internal Server Error", 500
+
+        finally:
+            # Ensure the session is closed even if an error occurs
+            if 'db' in locals() and db.is_active:
+                db.close()
 
     return render_template("register.html")
 
@@ -346,4 +334,4 @@ def logout():
 # --- Start App ---
 if __name__ == "__main__":
     create_db_and_tables()
-    app.run(debug=True)
+    app.run(debug=False)
