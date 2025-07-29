@@ -1,11 +1,15 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from cli import save_plan, check_db_for_destination, view_saved_plan, plan_new_trip
+from cli import (save_plan, check_db_for_destination,
+                view_saved_plan, plan_new_trip)
 
 
 class TestLCliFunctions(unittest.TestCase):
+    """Contains all the tests for database functions."""
+
     @patch("cli.SessionLocal")
     def test_save_plan(self, mock_session):
+        """Represent a mock."""
         db = MagicMock()
         mock_session.return_value.__enter__.return_value = db
         mock_add = db.add
@@ -35,6 +39,7 @@ class TestLCliFunctions(unittest.TestCase):
 
     @patch("cli.SessionLocal")
     def test_check_db_for_destination_found(self, mock_session):
+        """Represent a mock."""
         db = MagicMock()
         mock_session.return_value.__enter__.return_value = db
 
@@ -55,6 +60,7 @@ class TestLCliFunctions(unittest.TestCase):
     @patch("builtins.input", side_effect=["1"])
     @patch("cli.SessionLocal")
     def test_view_saved_plan_found(self, mock_session, mock_input):
+        """Represent a mock."""
         db = MagicMock()
         mock_session.return_value.__enter__.return_value = db
 
@@ -74,6 +80,7 @@ class TestLCliFunctions(unittest.TestCase):
 
     @patch("cli.SessionLocal")
     def test_save_plan_with_empty_attractions(self, mock_session):
+        """Represent a mock."""
         db = MagicMock()
         mock_session.return_value.__enter__.return_value = db
 
@@ -85,6 +92,7 @@ class TestLCliFunctions(unittest.TestCase):
 
     @patch("cli.SessionLocal")
     def test_check_db_for_destination_not_found(self, mock_session):
+        """Represent a mock."""
         db = MagicMock()
         mock_session.return_value.__enter__.return_value = db
         db.query().options().filter().order_by().first.return_value = None
@@ -94,6 +102,7 @@ class TestLCliFunctions(unittest.TestCase):
 
     @patch("cli.SessionLocal")
     def test_check_db_for_destination_case_insensitive(self, mock_session):
+        """Represent a mock."""
         db = MagicMock()
         mock_session.return_value.__enter__.return_value = db
 
@@ -112,12 +121,15 @@ class TestLCliFunctions(unittest.TestCase):
 
     @patch("builtins.input", side_effect=["invalid"])
     def test_view_saved_plan_invalid_input(self, mock_input):
+        """Represent a mock."""
         result = view_saved_plan()  # should not raise
         self.assertIsNone(result)
 
     @patch("builtins.input", side_effect=["Paris", "two", "food", "200"])
     def test_plan_new_trip_invalid_days(self, mock_input):
-        with patch("cli.check_db_for_destination"), patch("cli.get_attractions"), patch(
+        """Represent a mock."""
+        with patch("cli.check_db_for_destination"), patch(
+            "cli.get_attractions"), patch(
             "cli.get_itinerary"
         ), patch("cli.save_plan"):
             plan_new_trip()  # Should handle and print error without crash
@@ -139,6 +151,7 @@ class TestLCliFunctions(unittest.TestCase):
     def test_plan_new_trip_no_itinerary(
         self, mock_check, mock_yelp, mock_prompt, mock_input
     ):
+        """Represent a mock."""
         plan_new_trip()  # Should handle None from get_itinerary and not crash
 
 

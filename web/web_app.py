@@ -1,3 +1,8 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from flask import Flask, jsonify, render_template, request, redirect, session, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import joinedload
@@ -9,6 +14,8 @@ from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 app.secret_key = "bonvoyage123"
+
+create_db_and_tables()
 
 # --- Exchange Rate API ---
 @app.route("/api/exchange_rate/<destination>", methods=["GET"])
@@ -108,7 +115,8 @@ def api_view_saved_plan(plan_id):
                     "name": lm.name,
                     "address": lm.address,
                     "rating": lm.rating,
-                    "url": lm.url
+                    "url": lm.url,
+                    "image_url": lm.image_url
                 }
                 for lm in plan.landmarks
             ]

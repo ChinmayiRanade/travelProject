@@ -155,12 +155,31 @@ function view_saved_plan(id) {
 // Create saved plan card — no weather or currency
 function createPlanCard(detail) {
     const attractions = detail.attractions || [];
-    const attractionsHTML = attractions.slice(0, 5).map(
-        a => `<span class="landmark-tag">${a.name}</span>`
+
+    let firstImageHtml = '';
+    if (attractions[0] && attractions[0].image_url && attractions[0].url) {
+        firstImageHtml = `
+            <a href="${attractions[0].url}" target="_blank" rel="noopener noreferrer" class="plan-img-link">
+                <img class="plan-img" src="${attractions[0].image_url}" alt="Cover image of ${attractions[0].name}" loading="lazy">
+            </a>`;
+    } else {
+        firstImageHtml = `<div class="plan-img-placeholder"></div>`;
+    }
+
+    const attractionsHTML = attractions.slice(0, 5).map(a => 
+        a.image_url && a.url
+            ? `<span class="landmark-tag landmark-img-tag">
+                   <a href="${a.url}" target="_blank" rel="noopener noreferrer" class="landmark-link">
+                       <img src="${a.image_url}" alt="${a.name}" class="landmark-thumb" loading="lazy">
+                       <span class="landmark-name">${a.name}</span>
+                   </a>
+               </span>`
+            : `<span class="landmark-tag">${a.name}</span>`
     ).join("");
 
     const planCard = `
         <div class="plan-card" data-plan-id="${detail.plan_id}">
+            ${firstImageHtml}
             <div class="plan-header">
                 <div class="plan-destination">
                     <i class="fas fa-map-marker-alt"></i>
@@ -171,7 +190,6 @@ function createPlanCard(detail) {
                     <span>${averageRating(attractions)}</span>
                 </div>
             </div>
-            
             <div class="plan-landmarks">
                 <div class="landmarks-title">Top Attractions:</div>
                 <div class="landmarks-list">
@@ -180,8 +198,11 @@ function createPlanCard(detail) {
             </div>
         </div>
     `;
+
     document.getElementById("plansGrid").insertAdjacentHTML("beforeend", planCard);
 }
+
+
 
 // On page load: display all saved plans (with no weather or currency)
 document.addEventListener("DOMContentLoaded", () => {
