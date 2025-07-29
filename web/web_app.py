@@ -305,6 +305,7 @@ def register():
             new_user = User(username=username, email=email, hashed_password=password)
             db.add(new_user)
             db.commit()
+            db.refresh(new_user)
             db.close()
 
             session["user_id"] = new_user.id
