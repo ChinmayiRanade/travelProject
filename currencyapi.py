@@ -10,7 +10,7 @@ BASE_URL = "https://api.exchangerate.host/convert"
 print(f"--- CURRENCY API DEBUG ---")
 if API_KEY:
     # Print only a portion of the key for security
-    print(f"API Key Found. Starts with: {API_key[:4]}...")
+    print(f"API Key Found. Starts with: {API_KEY[:4]}...")
 else:
     print("API Key NOT FOUND. Check environment variables on Render.")
 print(f"--------------------------")
