@@ -148,12 +148,9 @@ def dashboard():
 
 @app.route("/profile")
 def profile():
-    if "username" not in session:
-        return redirect(url_for("login_page"))
-
     user_id = session.get("user_id")
     if not user_id:
-        return redirect(url_for("logout"))
+        return redirect(url_for("login_page"))
 
     db = SessionLocal()
     user = db.query(User).filter_by(id=user_id).first()
@@ -161,6 +158,8 @@ def profile():
         return redirect(url_for("logout"))
 
     return render_template("profile.html", user=user)
+
+
 @app.route("/update_profile", methods=["POST"])
 def update_profile():
     if "user_id" not in session:
@@ -308,6 +307,7 @@ def register():
             db.commit()
             db.close()
 
+            session["user_id"] = new_user.id
             session["username"] = username
             return redirect(url_for("home"))
 
