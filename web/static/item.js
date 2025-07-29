@@ -10,14 +10,14 @@ document.getElementById('travelForm').addEventListener('submit', async function(
     const destination = document.getElementById("destination").value;
     const duration = document.getElementById("duration").value;
     const budget = document.getElementById("budget").value;
-    const intrest = document.getElementById("interest").value;
+    const interest = document.getElementById("interest").value;
     // const travelers = document.getElementById("travelers").value;
 
     const formData = {
         destination: destination,
         duration: parseInt(duration),
         budget: parseFloat(budget),
-        intrest: intrest
+        interests: interest
     };
 
     loading.style.display = 'flex';

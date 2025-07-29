@@ -5,35 +5,22 @@ from weather import get_weather_forecast  # Import your weather function
 
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
 def get_itinerary(destination, num_days, interest, attractions, budget):
-    """
-    Generates a travel itinerary using a generative AI model with weather integration.
-    Args:
-        destination (str): The travel destination.
-        num_days (int): The duration of trip.
-        interest (str): The User's interests.
-        attractions (list): A list of dictionaries of attractions to visit.
-        budget (int): Daily budget for the trip.
-    Returns:
-        str: The generated itinerary text.
-    """
     names = []
     for p in attractions:
         line = f"- {p['name']} ({p['address']}, Rating: {p['rating']})"
         names.append(line)
     attractions_list = "\n".join(names)
-    
-    # Get weather forecast for the destination
-    weather_forecast = ""
+
+    # Get weather forecast
     try:
         weather_forecast = get_weather_forecast(destination, num_days)
         print(f"Weather forecast retrieved for {destination}")
     except Exception as e:
         print(f"Weather forecast failed: {e}")
         weather_forecast = "Weather forecast unavailable"
-    
+
+    # Build initial prompt
     prompt = (
         f"You are a helpful and culturally aware travel planner. "
         f"The user is visiting {destination} for {num_days} days and is "
@@ -63,7 +50,30 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
         f"- Include weather-specific tips (umbrella, sunscreen, etc.)\n\n"
         f"Use friendly tone, clear structure, and format the output with 'Day 1', 'Day 2', etc."
     )
-    
+
+    # Add special instructions based on interest
+    interest_note = ""
+    if "food" in interest.lower():
+        interest_note = "Focus on local food markets, famous dishes, and hidden culinary gems."
+    elif "art" in interest.lower():
+        interest_note = "Include museums, galleries, art walks, and cultural events."
+    elif "adventure" in interest.lower():
+        interest_note = "Add hiking, ziplining, water sports, or adrenaline-inducing activities."
+    elif "photography" in interest.lower():
+        interest_note = "Suggest scenic spots, golden hour times, and panoramic views for photography."
+
+    prompt += (
+        f"\n\nInclude any notable events, festivals, or exhibitions happening in {destination} "
+        f"during the trip, if any."
+    )
+
+    if interest_note:
+        prompt += f"\n\nSpecial instructions based on interest:\n{interest_note}"
+
+    if "shopping" in interest.lower():
+        prompt += "\nInclude local shopping spots and tips for budget-friendly purchases."
+
+    # Call OpenAI API
     try:
         response = openai.ChatCompletion.create(
             model="gpt-4o",
