@@ -12,6 +12,7 @@ from currencyapi import get_rate_for_city, get_city_currency
 from database import SessionLocal, create_db_and_tables, Travel, Landmark, User
 
 app = Flask(__name__)
+# Use an environment variable for the secret key; provide a safe dev fallback
 app.secret_key = "bonvoyage123"
 
 create_db_and_tables()
@@ -147,12 +148,17 @@ def dashboard():
 
 @app.route("/profile")
 def profile():
-    if "username" not in session:
+    # Require both username and user_id to be present; avoid KeyError with .get()
+    if not session.get("username") or not session.get("user_id"):
         return redirect(url_for("login_page"))
-    db = SessionLocal()
-    user = db.query(User).filter_by(id=session["user_id"]).first()
+
+    with SessionLocal() as db:
+        user = db.query(User).filter_by(id=session.get("user_id")).first()
+
     if not user:
+        # If the session references a user that no longer exists, log out cleanly
         return redirect(url_for("logout"))
+
     return render_template("profile.html", user=user)
 
 # --- Auth Pages ---
@@ -210,31 +216,8 @@ def forgot_password():
                 flash("Password reset successful. Please login.", "success")
                 return redirect(url_for("login"))
 
-
-
+    db.close()
     return render_template("forgot_password.html", step=step, error=error)
-
-
-# @app.route('/reset_password', methods=["GET", "POST"])
-# def reset_password():
-#     user_id = session.get("reset_user_id")
-#     if not user_id:
-#         return redirect(url_for("login_page"))
-
-#     db = SessionLocal()
-#     user = db.query(User).filter_by(id=user_id).first()
-
-#     if request.method == "POST":
-#         new_password = request.form.get("new_password")
-#         if new_password:
-#             user.hashed_password = generate_password_hash(new_password)
-#             db.commit()
-#             session.pop("reset_user_id", None)  # Clear reset session
-#             return redirect(url_for("login_page"))
-#         else:
-#             return render_template("reset_password.html", error="Please enter a new password.")
-
-#     return render_template("reset_password.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -255,9 +238,13 @@ def register():
             new_user = User(username=username, email=email, hashed_password=password)
             db.add(new_user)
             db.commit()
-            db.close()
+            db.refresh(new_user)  # Ensure new_user.id is populated
 
-            session["username"] = username
+            # Set both username and user_id so /profile and other routes work
+            session["username"] = new_user.username
+            session["user_id"] = new_user.id
+
+            db.close()
             return redirect(url_for("home"))
 
         except Exception as e:
@@ -280,8 +267,10 @@ def login():
         session["username"] = user.username
         session["user_id"] = user.id
         flash("Welcome back!", "success")
+        db.close()
         return redirect(url_for("home"))
     flash("Invalid username or password", "error")
+    db.close()
     return redirect(url_for("login"))
 
 @app.route("/logout")

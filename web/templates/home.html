@@ -54,7 +54,7 @@
                 {% if session.username %}
                     <h1>Hello, {{ session.username }}!</h1>
                 {% endif %}
-                <h1>✈️ Wander Without Worry</h1>
+                <h1>📍 Wander Without Worry</h1>
                 <p>Discover amazing destinations and create unforgettable travel experiences</p>
             </section>
 
@@ -62,7 +62,7 @@
             <section class="form-section">
                 <h2 class="form-title">
                     <i class="fas fa-plus-circle"></i>
-                    Create New Travel Plan
+                    Create New Itinerary
                 </h2>
                 <form id="travelForm" method="POST" action="/generate_plan">
                     <div class="form-grid">
@@ -90,11 +90,12 @@
                 </form>
                 
                 <div class="loading" id="loading">
-                    <div class="airplane-container">
-                        <i class="fas fa-plane"></i>
+                    <div class="icon-container">
+                      <i class="fas fa-spinner fa-spin"></i>
                     </div>
-                    <p>Preparing your journey... Landing shortly!</p>
+                    <p>Preparing your itinerary... Almost ready!</p>
                 </div>
+                  
             </section>
 
             <!-- Generated Itinerary Section -->
