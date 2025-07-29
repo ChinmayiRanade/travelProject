@@ -936,3 +936,81 @@ body::before {
     padding: 0.3rem 0.8rem;
   }
 }
+/* Loading animation styles */
+.loading {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px 0;
+  text-align: center;
+  color: #555;
+  font-family: 'Inter', sans-serif;
+}
+
+.airplane-container {
+  font-size: 40px;
+  color: #0077ff;
+  animation: flyAcross 2s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes flyAcross {
+  0% {
+    transform: translateX(-200%) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(0%) rotate(5deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translateX(100%) rotate(-5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+/* Loading container */
+.loading {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px 0;
+  text-align: center;
+  color: #333;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Airplane landing animation */
+.airplane-landing {
+  font-size: 48px;
+  color: #0077ff;
+  animation: airplaneLanding 2.5s ease-in-out infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes airplaneLanding {
+  0% {
+    transform: translateY(-100px) translateX(-60px) rotate(-20deg);
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(5px) rotate(0deg);
+    opacity: 0.5;
+  }
+}

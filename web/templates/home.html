@@ -20,6 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bon Voyage</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body>
     <!-- Header -->
@@ -61,7 +62,7 @@
                     <i class="fas fa-plus-circle"></i>
                     Create New Travel Plan
                 </h2>
-                <form id="travelForm">
+                <form id="travelForm" method="POST" action="/generate_plan">
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="destination">Destination</label>
@@ -75,6 +76,10 @@
                             <label for="budget">Budget ($)</label>
                             <input type="number" id="budget" name="budget" min="0" placeholder="1000" required>
                         </div>
+                        <div class="form-group">
+                            <label for="Interest">What are your interests?</label>
+                            <input type="text" id="interest" name="interest" placeholder="Enter your interest" required>
+                        </div>
                     </div>
                     <button type="submit" class="btn">
                         <i class="fas fa-magic"></i>
@@ -83,8 +88,10 @@
                 </form>
                 
                 <div class="loading" id="loading">
-                    <div class="spinner"></div>
-                    <p>Creating your perfect travel plan...</p>
+                    <div class="airplane-container">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <p>Preparing your journey... Landing shortly!</p>
                 </div>
             </section>
 

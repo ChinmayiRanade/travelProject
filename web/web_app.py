@@ -24,6 +24,40 @@ def api_get_exchange_rate(destination):
         return jsonify({"error": f"Failed to get exchange rate: {str(e)}"}), 500
 
 # --- AI Trip Planning ---
+@app.route("/generate_plan", methods=["POST"])
+def generate_plan():
+    destination = request.form.get("destination")
+    duration = request.form.get("duration")
+    budget = request.form.get("budget")
+    interests = request.form.get("interest")  # match form name
+
+    if not destination or not duration or not budget:
+        flash("Please fill out all required fields.", "error")
+        return redirect(url_for("dashboard"))
+
+    try:
+        num_days = int(duration)
+        budget = int(budget)
+    except ValueError:
+        flash("Duration and budget must be numbers.", "error")
+        return redirect(url_for("dashboard"))
+
+    attractions = check_db_for_destination(destination)
+    if not attractions:
+        attractions = get_attractions(destination, num_days)
+    if not attractions:
+        flash(f"No attractions found for '{destination}'.", "error")
+        return redirect(url_for("dashboard"))
+
+    itinerary_text = get_itinerary(destination, num_days, interests, attractions, budget)
+    if itinerary_text:
+        save_plan(destination, attractions)
+        return render_template("travel_results.html", destination=destination, itinerary=itinerary_text)
+    
+    flash("Itinerary could not be generated.", "error")
+    return redirect(url_for("dashboard"))
+
+
 @app.route("/api/plan_new_trip", methods=["POST"])
 def api_plan_new_trip():
     data = request.get_json()
@@ -120,6 +154,80 @@ def login_page():
         return redirect(url_for("home"))
     return render_template("login.html")
 
+@app.route('/forgot_password', methods=["GET", "POST"])
+def forgot_password():
+    db = SessionLocal()
+    step = "identify"  # default view is asking for username/email
+    user = None
+    error = None
+
+    if request.method == "POST":
+        if "identifier" in request.form:
+            identifier = request.form.get("identifier")
+            user = db.query(User).filter(
+                (User.username == identifier) | (User.email == identifier)
+            ).first()
+            if user:
+                session["reset_user_id"] = user.id
+                step = "reset"
+            else:
+                error = "No user found with that username or email."
+
+        elif "new_password" in request.form:
+            user_id = session.get("reset_user_id")
+            user = db.query(User).filter_by(id=user_id).first()
+            new_password = request.form.get("new_password")
+            confirm_password = request.form.get("confirm_password")
+
+            if not user:
+                error = "Session expired. Please enter your username/email again."
+                step = "identify"
+
+            elif not new_password or not confirm_password:
+                error = "Both password fields are required."
+                step = "reset"
+
+            elif new_password != confirm_password:
+                error = "Passwords do not match."
+                step = "reset"
+
+            elif check_password_hash(user.hashed_password, new_password):
+                error = "New password must be different from the current password."
+                step = "reset"
+
+            else:
+                user.hashed_password = generate_password_hash(new_password)
+                db.commit()
+                session.pop("reset_user_id", None)
+                flash("Password reset successful. Please login.", "success")
+                return redirect(url_for("login"))
+
+
+
+    return render_template("forgot_password.html", step=step, error=error)
+
+
+# @app.route('/reset_password', methods=["GET", "POST"])
+# def reset_password():
+#     user_id = session.get("reset_user_id")
+#     if not user_id:
+#         return redirect(url_for("login_page"))
+
+#     db = SessionLocal()
+#     user = db.query(User).filter_by(id=user_id).first()
+
+#     if request.method == "POST":
+#         new_password = request.form.get("new_password")
+#         if new_password:
+#             user.hashed_password = generate_password_hash(new_password)
+#             db.commit()
+#             session.pop("reset_user_id", None)  # Clear reset session
+#             return redirect(url_for("login_page"))
+#         else:
+#             return render_template("reset_password.html", error="Please enter a new password.")
+
+#     return render_template("reset_password.html")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -152,9 +260,6 @@ def register():
 
     return render_template("register.html")
 
-
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -169,7 +274,7 @@ def login():
         flash("Welcome back!", "success")
         return redirect(url_for("home"))
     flash("Invalid username or password", "error")
-    return redirect(url_for("login_page"))
+    return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout():
