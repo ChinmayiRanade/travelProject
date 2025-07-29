@@ -110,6 +110,9 @@
           <div class="divider"><span>or</span></div>
 
           <!-- Register Form -->
+           {% if register_error %}
+                <div class="message error show">{{ register_error }}</div>
+            {% endif %}
           <form class="login-form" method="POST" action="/register">
             <div class="form-group">
               <label for="reg-username">Username</label>
@@ -143,3 +146,4 @@
   </main>
 </body>
 </html>
+
