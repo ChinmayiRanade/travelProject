@@ -281,6 +281,9 @@ def register():
             db.add(new_user)
             db.commit()
 
+            db.refresh(new_user)
+
+
             user_id = new_user.id
             user_name = new_user.username
 

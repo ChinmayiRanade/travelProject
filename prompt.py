@@ -22,6 +22,7 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
 
     # Build initial prompt
     prompt = (
+        f"Generate a travel itinerary that is clearly divided by days."
         f"You are a helpful and culturally aware travel planner. "
         f"The user is visiting {destination} for {num_days} days and is "
         f"particularly interested in {interest}.\n"
