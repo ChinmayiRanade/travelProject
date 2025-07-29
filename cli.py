@@ -6,11 +6,9 @@ from sqlalchemy.orm import joinedload
 
 
 def save_plan(destination, attractions):
-    """
-    Saves the travel plan and attractions to database.
-    """
+    """Save the travel plan and attractions to database."""
     with SessionLocal() as db:
-        new_travel_plan = Travel(destination=destination, 
+        new_travel_plan = Travel(destination=destination,
                                  num_places=len(attractions))
 
         for place in attractions:
@@ -32,10 +30,7 @@ def save_plan(destination, attractions):
 
 
 def view_saved_plan():
-    """
-    Retrieves and displays a saved travel plan from database.
-    """
-
+    """Retrieve and display a saved travel plan from database."""
     try:
         plan_id = int(input("Enter the id of the plan you want to view: "))
     except ValueError:
@@ -68,7 +63,7 @@ def view_saved_plan():
 
 
 def view_all_plans():
-    """Retrieves and displays a summary of all saved travel plans."""
+    """Retrieve and display a summary of all saved travel plans."""
     with SessionLocal() as db:
         # Query for all plans, ordering by the most recent first.
         all_plans = db.query(Travel).order_by(Travel.id.desc()).all()
@@ -88,7 +83,7 @@ def view_all_plans():
 
 def check_db_for_destination(destination_name):
     """
-    Checks the database for a previously saved plan for a destination.
+    Check the database for a previously saved plan for a destination.
 
     Args:
         destination_name (str): The name of the city to check.
@@ -129,9 +124,7 @@ def check_db_for_destination(destination_name):
 
 
 def plan_new_trip():
-    """
-    Guides the user through planning a new trip.
-    """
+    """Guide the user through planning a new trip."""
     destination = input("Enter a city for your travel itinerary: ")
     days = input("How many days are you traveling for? ")
     interests = input(
@@ -196,6 +189,7 @@ def plan_new_trip():
 
 
 def show_menu():
+    """Show menu."""
     print("\n✈️ Bon Voyage: Your Personal Travel Planner ✈️")
     print("---------------------------------------------")
     print("0. Show Menu Again")
@@ -207,6 +201,7 @@ def show_menu():
 
 
 def main():
+    """Show main menu."""
     create_db_and_tables()
     show_menu()
 
