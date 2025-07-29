@@ -37,7 +37,7 @@ def view_saved_plan():
     """
 
     try:
-        plan_id = int(input("Enter the id of the travel plan you want to view: "))
+        plan_id = int(input("Enter the id of the plan you want to view: "))
     except ValueError:
         print("Invalid ID. Please enter a number.")
         return
@@ -242,4 +242,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
