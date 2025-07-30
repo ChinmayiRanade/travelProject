@@ -95,17 +95,25 @@ def api_plan_new_trip():
 
     itinerary_text = get_itinerary(destination, num_days, interests, attractions, budget)
     if itinerary_text:
-        save_plan(destination, attractions)
+        user_id = session.get("user_id")
+        save_plan(destination, attractions, user_id)
         return jsonify({"message": "Itinerary generated!", "destination": destination, "itinerary": itinerary_text}), 200
     return jsonify({"error": "Could not generate itinerary"}), 500
 
 # --- View saved plans ---
 @app.route("/api/view_plan/<int:plan_id>", methods=["GET"])
 def api_view_saved_plan(plan_id):
+    if "user_id" not in session:
+        return redirect(url_for("login_page"))
     with SessionLocal() as db:
         plan = db.query(Travel).options(joinedload(Travel.landmarks)).filter(Travel.id == plan_id).first()
-        if not plan:
-            return jsonify({"error": f"No travel plan found with ID: {plan_id}"}), 404
+        # if not plan:
+        #     return jsonify({"error": f"No travel plan found with ID: {plan_id}"}), 404
+
+        if not plan or plan.user_id != session["user_id"]:
+            # ...then flash an error and redirect them.
+            # flash("Plan not found or you do not have permission to view it.", "error")
+            return redirect(url_for("my_plans"))
         return jsonify({
             "plan_id": plan.id,
             "destination": plan.destination,
@@ -124,8 +132,11 @@ def api_view_saved_plan(plan_id):
 
 @app.route("/api/view_all_plans", methods=["GET"])
 def api_view_all_plans():
+    if "user_id" not in session:
+        return redirect(url_for("login_page"))
+
     with SessionLocal() as db:
-        all_plans = db.query(Travel).order_by(Travel.id.desc()).all()
+        all_plans = db.query(Travel).filter(Travel.user_id == session["user_id"]).order_by(Travel.id.desc()).all()
         if not all_plans:
             return jsonify({"message": "No travel plans saved yet."}), 200
         return jsonify([
