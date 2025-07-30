@@ -15,7 +15,6 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
     # Get weather forecast
     try:
         weather_forecast = get_weather_forecast(destination, num_days)
-        print(f"Weather forecast retrieved for {destination}")
     except Exception as e:
         print(f"Weather forecast failed: {e}")
         weather_forecast = "Weather forecast unavailable"
@@ -33,7 +32,7 @@ def get_itinerary(destination, num_days, interest, attractions, budget):
         f"Based on these locations, their interests, the ${budget} daily budget, "
         f"and the weather forecast above, create a detailed {num_days}-day travel itinerary. "
         f"Each day must include:\n"
-        f"- 🌤️ Weather conditions for the day (from the forecast above)\n"
+        f"- 🌤️ Weather conditions\n"
         f"- Morning, afternoon, and evening activity (with time suggestions)\n"
         f"- Weather-appropriate activity recommendations (indoor/outdoor based on conditions)\n"
         f"- Mention which attraction is visited and when\n"

@@ -1,4 +1,3 @@
-
 // Form submission: triggers new trip planning
 document.getElementById('travelForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -84,6 +83,15 @@ document.getElementById("duration").addEventListener("input", function () {
     }
 });
 
+document.getElementById("duration").addEventListener("input", function () {
+    const max = 5;
+    const val = parseInt(this.value, 10);
+    if (val > max) {
+        alert("Maximum duration is 5 days.");
+        // this.value = max; // optional: auto-correct the value
+    }
+});
+
 function hideDestinationPreview() {
     const preview = document.querySelector('.destination-preview');
     if (preview) {
@@ -152,7 +160,6 @@ function view_saved_plan(id) {
         });
 }
 
-// Create saved plan card — no weather or currency
 function createPlanCard(detail) {
     const attractions = detail.attractions || [];
 
@@ -210,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(plans => {
             const plansGrid = document.getElementById("plansGrid");
-            plansGrid.innerHTML = ""; // Clear placeholder content
+            plansGrid.innerHTML = "";
 
             if (!Array.isArray(plans) || plans.length === 0) {
                 plansGrid.innerHTML = "<p>No saved travel plans found.</p>";
