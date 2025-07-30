@@ -5,11 +5,12 @@ from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 
 
-def save_plan(destination, attractions):
+def save_plan(destination, attractions, user_id):
     """Save the travel plan and attractions to database."""
     with SessionLocal() as db:
         new_travel_plan = Travel(destination=destination,
-                                 num_places=len(attractions))
+                                 num_places=len(attractions),
+                                 user_id=user_id)
 
         for place in attractions:
             new_landmark = Landmark(
