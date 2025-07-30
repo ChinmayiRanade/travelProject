@@ -19,7 +19,7 @@ else:
 
 
 # Set echo=True temporarily if you want to debug SQL locally
-engine = create_engine(DATABASE_URL, echo=True, **engine_kwargs)
+engine = create_engine(DATABASE_URL, echo=False, **engine_kwargs)
 
 
 # Important: prevent attribute expiration after commit (avoids DetachedInstanceError)
